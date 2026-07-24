@@ -385,7 +385,7 @@
    ============================================================ */
 const SUPABASE_URL = 'https://lgkmxmhfvoralcmrmuqf.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_OF3ItQb4lWtYNoce1zmLLA_KdDATART';
-const FUNKTION     = 'Adorno';   // Name deiner Edge Function
+const FUNKTION     = 'Adorno';   // Name deiner Edge Function (Groß-/Kleinschreibung zählt!)
 /* ========================================================== */
 
 /* ---------------- Starter-Karten (aus Scherf, Bd. 1) ---------------- */
@@ -507,16 +507,33 @@ async function fullSync(){
 async function frageAdorno(verlauf,kontext){
   if(!sb)throw new Error('Der Speicher ist nicht verbunden.');
   if(!user)throw new Error('Bitte zuerst unter „Konto & Sync" anmelden.');
-  const {data,error}=await sb.functions.invoke(FUNKTION,{
-    body:{rolle:'sparring',verlauf,kontext:kontext||''}
-  });
-  if(error){
-    let detail=error.message||'Unbekannter Fehler';
-    try{const c=await error.context?.json();if(c&&c.fehler)detail=c.fehler;}catch(_){}
-    throw new Error(detail);
+
+  const {data:sess}=await sb.auth.getSession();
+  const token=sess&&sess.session?sess.session.access_token:null;
+  if(!token)throw new Error('Keine gültige Sitzung. Bitte einmal ab- und wieder anmelden.');
+
+  const url=SUPABASE_URL.replace(/\/+$/,'')+'/functions/v1/'+FUNKTION;
+  let r;
+  try{
+    r=await fetch(url,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({rolle:'sparring',verlauf,kontext:kontext||''})
+    });
+  }catch(netz){
+    throw new Error('Verbindung blockiert (CORS/Netzwerk) bei '+url+' — '+(netz.message||netz));
   }
-  if(data&&data.fehler)throw new Error(data.fehler);
-  return (data&&data.text)||'(keine Antwort)';
+
+  const roh=await r.text();
+  let daten=null;
+  try{daten=JSON.parse(roh);}catch(_){}
+
+  if(!r.ok){
+    const detail=(daten&&daten.fehler)?daten.fehler:roh.slice(0,300);
+    throw new Error('HTTP '+r.status+' — '+detail);
+  }
+  if(daten&&daten.fehler)throw new Error(daten.fehler);
+  return (daten&&daten.text)||'(keine Antwort)';
 }
 
 /* ---------------- Sparring-UI ---------------- */
