@@ -257,7 +257,7 @@
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5C2 3.7 2.7 3 3.5 3H8v10H3.5C2.7 13 2 12.3 2 11.5v-7Z" fill="#fff" opacity=".95"/><path d="M14 4.5c0-.8-.7-1.5-1.5-1.5H8v10h4.5c.8 0 1.5-.7 1.5-1.5v-7Z" fill="#fff" opacity=".6"/></svg></div>
-      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 3 · Adorno live</div></div>
+      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 4 · Adorno live</div></div>
     </div>
     <button class="newgoal" onclick="go('paths')"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>Neues Lernziel</button>
     <div class="navlabel">Lernen</div>
@@ -429,6 +429,8 @@ function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):nul
 function saveLocal(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){mem=s;}}
 let S=load()||{};
 S.rev=S.rev||{};S.streak=S.streak||{count:0,last:null};S.total=S.total||0;S.chats=S.chats||{};
+// Altlasten aufräumen: früher wurden Fehlermeldungen im Gespräch mitgespeichert
+Object.values(S.chats).forEach(c=>{if(c&&c.fehler)delete c.fehler;});
 
 const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -540,7 +542,7 @@ async function frageAdorno(verlauf,kontext){
 }
 
 /* ---------------- Sparring-UI ---------------- */
-let chatKey=null,denkt=false;
+let chatKey=null,denkt=false,letzterFehler=null;
 
 function chatOf(k){return S.chats[k];}
 function neuerChat(k,titel,kontext,startsatz){
@@ -569,14 +571,15 @@ function chatLoeschen(){
 async function sendeNachricht(text){
   const t=(text||'').trim();if(!t||denkt||!chatKey)return;
   const c=S.chats[chatKey];if(!c)return;
+  letzterFehler=null;
   c.msgs.push({role:'user',content:t});c.ts=Date.now();
   saveLocal(S);denkt=true;renderSpar();
   try{
     const antwort=await frageAdorno(c.msgs.slice(-20),c.kontext);
     c.msgs.push({role:'assistant',content:antwort});c.ts=Date.now();
-    delete c.fehler;
+    letzterFehler=null;
   }catch(e){
-    c.fehler=e.message||String(e);
+    letzterFehler=e.message||String(e);
   }
   denkt=false;saveLocal(S);schedulePush();renderSpar();
 }
@@ -627,7 +630,7 @@ function renderSpar(){
     ? `<div class="msg me"><div class="mtext">${esc(m.content)}</div></div>`
     : `<div class="msg coach-msg"><svg class="mav"><use href="#adorno"/></svg><div class="mtext">${esc(m.content)}</div></div>`
   ).join('');
-  const fehler=c.fehler?`<div class="msg err"><div class="mtext">Da ging etwas schief: ${esc(c.fehler)}</div></div>`:'';
+  const fehler=letzterFehler?`<div class="msg err"><div class="mtext">Da ging etwas schief: ${esc(letzterFehler)}</div></div>`:'';
   const denken=denkt?`<div class="thinking"><svg class="mav" style="width:34px;height:34px"><use href="#adorno"/></svg>
       <div class="bubble"><i></i><i></i><i></i></div></div>`:'';
 
