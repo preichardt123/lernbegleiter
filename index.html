@@ -145,6 +145,31 @@
     border:1px solid var(--accent-line);padding:8px 13px;border-radius:99px;cursor:pointer}
   .topicrow .t:active{background:#DEE9F5}
 
+  #p-spar.imchat .topbar{display:none}
+  .pinkopf{position:sticky;top:var(--mbh,0px);z-index:6;background:var(--surface);
+    border:1px solid var(--border);border-radius:13px;padding:11px 13px;
+    box-shadow:0 6px 18px -12px rgba(40,50,60,.4);margin-bottom:4px}
+  .pinzeile{display:flex;align-items:center;gap:11px}
+  .pinback{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:#fff;
+    color:var(--muted);font-size:17px;line-height:1;cursor:pointer;flex:none;display:flex;
+    align-items:center;justify-content:center;padding:0 2px 2px 0}
+  .pinback:active{background:var(--accent-soft)}
+  .pinav{width:30px;height:30px;flex:none}
+  .pintxt{flex:1;min-width:0}
+  .pintitel{font-size:14px;font-weight:600;letter-spacing:-.01em;line-height:1.25;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pinmeta{font-size:11.5px;color:var(--faint);margin-top:1px;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  .pintoggle{flex:none;background:var(--accent-soft);border:1px solid var(--accent-line);
+    color:var(--accent-deep);font-size:11.5px;font-weight:600;padding:6px 10px;border-radius:99px;cursor:pointer;
+    display:flex;align-items:center;gap:5px}
+  .pintoggle svg{transition:transform .2s}
+  .pintoggle.auf svg{transform:rotate(180deg)}
+  .pinkontext{margin-top:10px;padding-top:10px;border-top:1px solid var(--border-2);
+    font-size:12.5px;line-height:1.55;color:#46525C}
+  .pinkontext .pk{display:block;margin-bottom:5px}
+  .pinkontext .pk:last-child{margin-bottom:0}
+  .pinkontext b{color:var(--accent-deep);font-weight:600}
   .chat{display:flex;flex-direction:column;gap:12px;margin-top:16px}
   .msg{display:flex;gap:11px;max-width:92%}
   .msg .mav{width:34px;height:34px;flex:none}
@@ -330,7 +355,7 @@
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5C2 3.7 2.7 3 3.5 3H8v10H3.5C2.7 13 2 12.3 2 11.5v-7Z" fill="#fff" opacity=".95"/><path d="M14 4.5c0-.8-.7-1.5-1.5-1.5H8v10h4.5c.8 0 1.5-.7 1.5-1.5v-7Z" fill="#fff" opacity=".6"/></svg></div>
-      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 7 · eigene Karten</div></div>
+      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 10 · Thema angepinnt</div></div>
     </div>
     <button class="newgoal" onclick="go('paths')"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>Neues Lernziel</button>
     <div class="navlabel">Lernen</div>
@@ -479,18 +504,18 @@ const FUNKTION     = 'Adorno';   // Name deiner Edge Function (Groß-/Kleinschre
 
 /* ---------------- Starter-Karten (aus Scherf, Bd. 1) ---------------- */
 const STARTER=[
- {id:'c1',fn:'Musgrave · Staatsfunktion 1',concept:'Das Allokationsziel',core:'Der Staat springt dort ein, wo der Markt <span class="hl">öffentliche Güter</span> nicht ausreichend bereitstellt.',q:'Warum kann der Markt öffentliche Güter nicht angemessen bereitstellen?',a:'Weil sie nichtausschließbar und nichtrival sind: Niemand lässt sich von der Nutzung ausschließen, also entsteht das Trittbrettfahrerproblem – privat werden sie nicht (ausreichend) angeboten.',src:'Scherf S.12'},
- {id:'c2',fn:'Öffentliche Güter',concept:'Zwei Kriterien',core:'Ein <span class="hl">reines</span> öffentliches Gut erfüllt beide Kriterien zugleich.',q:'Nenne die zwei Eigenschaften eines reinen öffentlichen Guts und erkläre sie in eigenen Worten.',a:'Nichtausschließbarkeit (man kann niemanden von der Nutzung ausschließen) und Nichtrivalität (der Nutzen des einen mindert nicht den des anderen). Beispiel: äußere Sicherheit, saubere Luft.',src:'Scherf S.12'},
- {id:'c3',fn:'Marktversagen',concept:'Trittbrettfahrerproblem',core:'Der Anreiz, ohne Beitrag zu nutzen, macht die private Bereitstellung <span class="hl">unmöglich</span>.',q:'Erkläre, warum bei öffentlichen Gütern jeder einen Anreiz zum Trittbrettfahren hat.',a:'Weil niemand ausgeschlossen werden kann, lohnt es sich, das Gut zu nutzen, ohne für die Bereitstellung zu zahlen. Zahlt niemand freiwillig, wird das Gut privat nicht angeboten – der Staat muss über Zwangsabgaben finanzieren.',src:'Scherf S.13'},
- {id:'c4',fn:'Allokation · Sonderfälle',concept:'Externe Effekte',core:'Nebenwirkungen privater Aktivität (z.&nbsp;B. Umweltbelastung) verzerren die <span class="hl">Versorgung</span>.',q:'Wie kann der Staat externe Effekte in das private Entscheidungskalkül zurückholen?',a:'Indem er den Verursachern die externen Kosten anlastet (z.&nbsp;B. über Abgaben), sodass sie diese in ihre Entscheidungen einpreisen und die Marktfunktion sich verbessert.',src:'Scherf S.13'},
- {id:'c5',fn:'Allokation · Sonderfälle',concept:'Meritorische Güter',core:'Hier greift der Staat sogar in die <span class="hl">privaten Präferenzen</span> selbst ein.',q:'Was unterscheidet den Eingriff bei meritorischen Gütern von der reinen Korrektur externer Effekte?',a:'Der Staat hält die privaten Präferenzen für verzerrt und will erziehen – z.&nbsp;B. mit einer Tabaksteuer nicht nur externe Effekte anlasten, sondern zu „vernünftigem" Verbrauch anregen.',src:'Scherf S.13'},
- {id:'c6',fn:'Musgrave · Staatsfunktion 2',concept:'Das Distributionsziel',core:'Der Staat korrigiert die <span class="hl">Marktverteilung</span> – wie weit, ist umstritten.',q:'Warum lässt sich die „gerechte" Verteilung nicht wissenschaftlich eindeutig bestimmen?',a:'Sie ist normativ: Nur über Werturteile zu beantworten. Jenseits des Pareto-Prinzips fehlt ein objektives Effizienzkriterium – Linke, Liberale und Konservative kommen zu verschiedenen Antworten.',src:'Scherf S.14'},
- {id:'c7',fn:'Distribution',concept:'Herkunft der Verteilung',core:'Ohne Eingriff folgt die Verteilung aus dem <span class="hl">Marktprozess</span>.',q:'Wodurch entsteht die Einkommens- und Vermögensverteilung, bevor der Staat eingreift?',a:'Aus der Faktorausstattung des Einzelnen (Humankapital und ererbtes Vermögen) in Verbindung mit der Faktorpreisbildung. Die Ungleichheit der Vermögen ist eine Hauptursache.',src:'Scherf S.13/14'},
- {id:'c8',fn:'Distribution',concept:'Sozialversicherung',core:'Ist meist <span class="hl">keine</span> Umverteilung von reich zu arm.',q:'Warum ist die Sozialversicherung überwiegend keine klassische Umverteilung?',a:'Beitragszahler und Leistungsempfänger sind über die Lebenszeit oft dieselben Personen (intertemporale Übertragung / Absicherung). Echte Umverteilung findet nur bei den versicherungsfremden Leistungen statt.',src:'Scherf S.14'},
- {id:'c9',fn:'Distribution',concept:'Effizienz vs. Umverteilung',core:'Zwischen beiden besteht ein <span class="hl">Spannungsfeld</span>.',q:'Beschreibe das Spannungsfeld zwischen Umverteilung und Effizienz.',a:'Umverteilung kann negative Anreizeffekte auslösen und die wirtschaftliche Aktivität dämpfen. Aber Effizienzverluste sprechen nicht grundsätzlich dagegen – beides muss ergebnisoffen gegeneinander abgewogen werden.',src:'Scherf S.14'},
- {id:'c10',fn:'Musgrave · Staatsfunktion 3',concept:'Das Stabilisierungsziel',core:'Das <span class="hl">jüngste</span> Ziel: Konjunkturschwankungen glätten.',q:'Warum ist eine Sparpolitik in der Rezession problematisch?',a:'Antizyklisch wäre expansiv (Ausgaben rauf, Steuern runter). Sparen in der Rezession dämpft die Nachfrage zusätzlich und verstärkt den Abschwung – Scherf sieht darin eine Nähe zur Brüningschen Politik.',src:'Scherf S.15'},
- {id:'c11',fn:'Stabilisierung',concept:'Keynes vs. Say',core:'Die Weltwirtschaftskrise 1929 erschütterte das <span class="hl">Saysche</span> Vertrauen.',q:'Welche Annahme des Sayschen Theorems hat Keynes widerlegt?',a:'Dass jedes Angebot sich seine Nachfrage selbst schafft und Vollbeschäftigung automatisch entsteht. Keynes zeigt: Es kann sich ein dauerhaftes Gleichgewicht bei Unterbeschäftigung einstellen.',src:'Scherf S.15'},
- {id:'c12',fn:'Überblick',concept:'Die Musgrave-Systematik',core:'Drei Aufgaben, ein gemeinsamer <span class="hl">Rechtfertigungsgrund</span>.',q:'Welche drei Aufgaben unterscheidet Musgrave – und was rechtfertigt staatliches Handeln in allen dreien?',a:'Allokation, Distribution und Stabilisierung. Gerechtfertigt wird der Eingriff jeweils durch Marktversagen bzw. unerwünschte Marktergebnisse.',src:'Scherf S.11'}
+ {id:'c1',fn:'Musgrave · Staatsfunktion 1',concept:'Das Allokationsziel',core:'Der Staat springt dort ein, wo der Markt **öffentliche Güter** nicht ausreichend bereitstellt.',q:'Warum kann der Markt öffentliche Güter nicht angemessen bereitstellen?',a:'Weil sie nichtausschließbar und nichtrival sind: Niemand lässt sich von der Nutzung ausschließen, also entsteht das Trittbrettfahrerproblem – privat werden sie nicht (ausreichend) angeboten.',src:'Scherf S.12'},
+ {id:'c2',fn:'Öffentliche Güter',concept:'Zwei Kriterien',core:'Ein **reines** öffentliches Gut erfüllt beide Kriterien zugleich.',q:'Nenne die zwei Eigenschaften eines reinen öffentlichen Guts und erkläre sie in eigenen Worten.',a:'Nichtausschließbarkeit (man kann niemanden von der Nutzung ausschließen) und Nichtrivalität (der Nutzen des einen mindert nicht den des anderen). Beispiel: äußere Sicherheit, saubere Luft.',src:'Scherf S.12'},
+ {id:'c3',fn:'Marktversagen',concept:'Trittbrettfahrerproblem',core:'Der Anreiz, ohne Beitrag zu nutzen, macht die private Bereitstellung **unmöglich**.',q:'Erkläre, warum bei öffentlichen Gütern jeder einen Anreiz zum Trittbrettfahren hat.',a:'Weil niemand ausgeschlossen werden kann, lohnt es sich, das Gut zu nutzen, ohne für die Bereitstellung zu zahlen. Zahlt niemand freiwillig, wird das Gut privat nicht angeboten – der Staat muss über Zwangsabgaben finanzieren.',src:'Scherf S.13'},
+ {id:'c4',fn:'Allokation · Sonderfälle',concept:'Externe Effekte',core:'Nebenwirkungen privater Aktivität (z.&nbsp;B. Umweltbelastung) verzerren die **Versorgung**.',q:'Wie kann der Staat externe Effekte in das private Entscheidungskalkül zurückholen?',a:'Indem er den Verursachern die externen Kosten anlastet (z.&nbsp;B. über Abgaben), sodass sie diese in ihre Entscheidungen einpreisen und die Marktfunktion sich verbessert.',src:'Scherf S.13'},
+ {id:'c5',fn:'Allokation · Sonderfälle',concept:'Meritorische Güter',core:'Hier greift der Staat sogar in die **privaten Präferenzen** selbst ein.',q:'Was unterscheidet den Eingriff bei meritorischen Gütern von der reinen Korrektur externer Effekte?',a:'Der Staat hält die privaten Präferenzen für verzerrt und will erziehen – z.&nbsp;B. mit einer Tabaksteuer nicht nur externe Effekte anlasten, sondern zu „vernünftigem" Verbrauch anregen.',src:'Scherf S.13'},
+ {id:'c6',fn:'Musgrave · Staatsfunktion 2',concept:'Das Distributionsziel',core:'Der Staat korrigiert die **Marktverteilung** – wie weit, ist umstritten.',q:'Warum lässt sich die „gerechte" Verteilung nicht wissenschaftlich eindeutig bestimmen?',a:'Sie ist normativ: Nur über Werturteile zu beantworten. Jenseits des Pareto-Prinzips fehlt ein objektives Effizienzkriterium – Linke, Liberale und Konservative kommen zu verschiedenen Antworten.',src:'Scherf S.14'},
+ {id:'c7',fn:'Distribution',concept:'Herkunft der Verteilung',core:'Ohne Eingriff folgt die Verteilung aus dem **Marktprozess**.',q:'Wodurch entsteht die Einkommens- und Vermögensverteilung, bevor der Staat eingreift?',a:'Aus der Faktorausstattung des Einzelnen (Humankapital und ererbtes Vermögen) in Verbindung mit der Faktorpreisbildung. Die Ungleichheit der Vermögen ist eine Hauptursache.',src:'Scherf S.13/14'},
+ {id:'c8',fn:'Distribution',concept:'Sozialversicherung',core:'Ist meist **keine** Umverteilung von reich zu arm.',q:'Warum ist die Sozialversicherung überwiegend keine klassische Umverteilung?',a:'Beitragszahler und Leistungsempfänger sind über die Lebenszeit oft dieselben Personen (intertemporale Übertragung / Absicherung). Echte Umverteilung findet nur bei den versicherungsfremden Leistungen statt.',src:'Scherf S.14'},
+ {id:'c9',fn:'Distribution',concept:'Effizienz vs. Umverteilung',core:'Zwischen beiden besteht ein **Spannungsfeld**.',q:'Beschreibe das Spannungsfeld zwischen Umverteilung und Effizienz.',a:'Umverteilung kann negative Anreizeffekte auslösen und die wirtschaftliche Aktivität dämpfen. Aber Effizienzverluste sprechen nicht grundsätzlich dagegen – beides muss ergebnisoffen gegeneinander abgewogen werden.',src:'Scherf S.14'},
+ {id:'c10',fn:'Musgrave · Staatsfunktion 3',concept:'Das Stabilisierungsziel',core:'Das **jüngste** Ziel: Konjunkturschwankungen glätten.',q:'Warum ist eine Sparpolitik in der Rezession problematisch?',a:'Antizyklisch wäre expansiv (Ausgaben rauf, Steuern runter). Sparen in der Rezession dämpft die Nachfrage zusätzlich und verstärkt den Abschwung – Scherf sieht darin eine Nähe zur Brüningschen Politik.',src:'Scherf S.15'},
+ {id:'c11',fn:'Stabilisierung',concept:'Keynes vs. Say',core:'Die Weltwirtschaftskrise 1929 erschütterte das **Saysche** Vertrauen.',q:'Welche Annahme des Sayschen Theorems hat Keynes widerlegt?',a:'Dass jedes Angebot sich seine Nachfrage selbst schafft und Vollbeschäftigung automatisch entsteht. Keynes zeigt: Es kann sich ein dauerhaftes Gleichgewicht bei Unterbeschäftigung einstellen.',src:'Scherf S.15'},
+ {id:'c12',fn:'Überblick',concept:'Die Musgrave-Systematik',core:'Drei Aufgaben, ein gemeinsamer **Rechtfertigungsgrund**.',q:'Welche drei Aufgaben unterscheidet Musgrave – und was rechtfertigt staatliches Handeln in allen dreien?',a:'Allokation, Distribution und Stabilisierung. Gerechtfertigt wird der Eingriff jeweils durch Marktversagen bzw. unerwünschte Marktergebnisse.',src:'Scherf S.11'}
 ];
 
 const THEMEN=[
@@ -538,6 +563,49 @@ function neueId(pre){return pre+'_'+Date.now().toString(36)+Math.random().toStri
 /* **Begriff** in der Kernaussage wird zur farbigen Hervorhebung */
 function kernHtml(t){
   return esc(String(t||'')).replace(/\*\*([^*]+)\*\*/g,'<span class="hl">$1</span>');
+}
+
+/* Kürzt nur im Notfall – und dann am Satz- oder Wortende, nie mitten im Wort. */
+function kuerze(t,max){
+  t=String(t||'').trim();
+  if(t.length<=max)return t;
+  const teil=t.slice(0,max);
+  const satz=Math.max(teil.lastIndexOf('. '),teil.lastIndexOf('! '),teil.lastIndexOf('? '));
+  if(satz>max*0.5)return teil.slice(0,satz+1);
+  const wort=teil.lastIndexOf(' ');
+  return (wort>max*0.5?teil.slice(0,wort):teil).replace(/[,;:\s]+$/,'')+' …';
+}
+
+/* Frühere Starter-Karten trugen zu vage Namen. Wird einmalig ersetzt –
+   aber nur, wenn der alte Name unverändert vorliegt. */
+const NAMENSFIX={
+  c1:['Das Allokationsziel','Allokation: warum der Staat eingreift'],
+  c2:['Zwei Kriterien','Nichtausschließbarkeit und Nichtrivalität'],
+  c6:['Das Distributionsziel','Distribution: Korrektur der Marktverteilung'],
+  c7:['Herkunft der Verteilung','Faktorausstattung als Ursache der Verteilung'],
+  c8:['Sozialversicherung','Sozialversicherung als Umverteilung über die Lebenszeit'],
+  c10:['Das Stabilisierungsziel','Stabilisierung: antizyklische Fiskalpolitik'],
+  c11:['Keynes vs. Say','Keynes gegen das Saysche Theorem'],
+  c12:['Die Musgrave-Systematik','Musgraves drei Staatsfunktionen']
+};
+
+/* Einmalige Reparatur: frühere Karten trugen die Hervorhebung als HTML,
+   das jetzt sichtbar wäre. Wird stillschweigend umgeschrieben. */
+function reparaturLauf(){
+  let geaendert=false;
+  Object.keys(NAMENSFIX).forEach(id=>{
+    const k=(S.karten||{})[id];if(!k)return;
+    const [altN,neuN]=NAMENSFIX[id];
+    if(k.concept===altN){k.concept=neuN;k.ts=Date.now();geaendert=true;}
+  });
+  Object.values(S.karten||{}).forEach(k=>{
+    if(k&&typeof k.core==='string'&&k.core.indexOf('<span')>=0){
+      k.core=k.core.replace(/<span class="hl">([^<]*)<\/span>/g,'**$1**').replace(/<[^>]+>/g,'');
+      k.ts=Date.now();geaendert=true;
+    }
+  });
+  if(geaendert)saveLocal(S);
+  return geaendert;
 }
 
 const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -651,7 +719,8 @@ async function pullMerge(){
   const {data,error}=await sb.from('lernstand').select('state').eq('user_id',user.id).maybeSingle();
   if(error)throw error;
   if(data&&data.state)S=mergeStates(S,data.state);
-  S.chats=S.chats||{};
+  S.chats=S.chats||{};S.karten=S.karten||{};S.quellen=S.quellen||{};S.tomb=S.tomb||{};
+  reparaturLauf();
   saveLocal(S);lastSync=new Date();
 }
 async function pushNow(){
@@ -705,7 +774,7 @@ async function frageAdorno(verlauf,kontext,rolle){
 }
 
 /* ---------------- Sparring-UI ---------------- */
-let chatKey=null,denkt=false,letzterFehler=null;
+let chatKey=null,denkt=false,letzterFehler=null,pinOffen=false;
 let partner='dozent';
 
 const PARTNER={
@@ -727,8 +796,8 @@ const PARTNER={
 function P(){return PARTNER[partner]||PARTNER.dozent;}
 
 function chatOf(k){return S.chats[k];}
-function neuerChat(k,titel,kontext,startsatz){
-  S.chats[k]={titel,kontext:kontext||'',partner,msgs:[],ts:Date.now()};
+function neuerChat(k,titel,kontext,startsatz,thema){
+  S.chats[k]={titel,kontext:kontext||'',thema:thema||null,partner,msgs:[],ts:Date.now()};
   chatKey=k;saveLocal(S);renderSpar();
   if(startsatz)sendeNachricht(startsatz);
 }
@@ -741,14 +810,19 @@ function streitUeber(id,wer){
   const c=karteById(id);if(!c)return;
   partner=wer||'dozent';
   const k=partner+'__karte_'+id;
-  const kontext='Karte: '+c.concept+' ('+c.fn+')\nKern: '+c.core.replace(/<[^>]+>/g,'')+'\nHintergrund: '+c.a+'\nQuelle: '+c.src;
+  const rein=t=>String(t||'').replace(/<[^>]+>/g,'').replace(/\*\*/g,'').trim();
+  const kontext='Karte: '+c.concept+' ('+c.fn+')\nKern: '+rein(c.core)+'\nHintergrund: '+rein(c.a)+'\nQuelle: '+c.src;
   go('spar');
   if(S.chats[k]){chatKey=k;renderSpar();return;}
+  // Der Eröffnungssatz nennt den Kern, damit auch DU im Verlauf siehst, worum es geht
+  const worum='„'+c.concept+'" ('+c.fn+') – Kern: '+kuerze(rein(c.core),240);
+  const thema={fn:c.fn,kern:rein(c.core),quelle:c.src,frage:rein(c.q)};
   neuerChat(k,c.concept,kontext,partner==='adorno'
-    ? 'Ich habe gerade die Karte „'+c.concept+'" gelernt. Nimm sie auseinander.'
-    : 'Ich habe gerade die Karte „'+c.concept+'" gelernt. Vertief das mit mir und prüf, ob ich es wirklich verstanden habe.');
+    ? 'Gerade gelernt: '+worum+'\n\nNimm das auseinander.'
+    : 'Gerade gelernt: '+worum+'\n\nVertief das mit mir und prüf, ob ich es wirklich verstanden habe.',thema);
 }
-function chatSchliessen(){chatKey=null;renderSpar();}
+function chatSchliessen(){chatKey=null;pinOffen=false;renderSpar();}
+function pinUm(){pinOffen=!pinOffen;renderSpar();}
 function chatLoeschen(){
   if(chatKey&&S.chats[chatKey]){delete S.chats[chatKey];chatKey=null;saveLocal(S);schedulePush();}
   renderSpar();
@@ -781,6 +855,10 @@ function autoHoehe(el){el.style.height='auto';el.style.height=Math.min(120,el.sc
 function renderSpar(){
   const el=document.getElementById('sparArea');if(!el)return;
   const p=P();
+  const imChat=!!(user&&chatKey&&S.chats[chatKey]&&(S.chats[chatKey].partner||'dozent')===partner);
+  const panel=document.getElementById('p-spar');
+  if(panel)panel.classList.toggle('imchat',imChat);
+  messeLeiste();
 
   const kopf=document.getElementById('sparTitel');
   if(kopf)kopf.textContent=p.name;
@@ -825,8 +903,36 @@ function renderSpar(){
   const denken=denkt?`<div class="thinking"><svg class="mav" style="width:34px;height:34px"><use href="${p.avatar}"/></svg>
       <div class="bubble"><i></i><i></i><i></i></div></div>`:'';
 
+  // Thema für die angepinnte Kopfzeile – notfalls aus dem alten Kontexttext lesen
+  let th=c.thema;
+  if(!th&&c.kontext){
+    const hol=(feld)=>{const m=c.kontext.match(new RegExp(feld+':\\s*(.+)'));return m?m[1].trim():'';};
+    const f=hol('Karte'),fn=(f.match(/\(([^)]+)\)\s*$/)||[])[1]||'';
+    th={fn:fn,kern:hol('Kern'),quelle:hol('Quelle'),frage:''};
+  }
+  const hatKontext=!!(th&&(th.kern||th.quelle||th.frage));
+  const pin=`
+    <div class="pinkopf">
+      <div class="pinzeile">
+        <button class="pinback" onclick="chatSchliessen()" title="Alle Gespräche">‹</button>
+        <svg class="pinav"><use href="${p.avatar}"/></svg>
+        <div class="pintxt">
+          <div class="pintitel">${esc(c.titel)}</div>
+          <div class="pinmeta">${esc(p.name)}${th&&th.fn?' · '+esc(th.fn):''}</div>
+        </div>
+        ${hatKontext?`<button class="pintoggle ${pinOffen?'auf':''}" onclick="pinUm()">Thema
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 4l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`:''}
+      </div>
+      ${hatKontext&&pinOffen?`<div class="pinkontext">
+        ${th.kern?`<span class="pk"><b>Kern:</b> ${esc(th.kern)}</span>`:''}
+        ${th.frage?`<span class="pk"><b>Selbsttest:</b> ${esc(th.frage)}</span>`:''}
+        ${th.quelle?`<span class="pk"><b>Quelle:</b> ${esc(th.quelle)}</span>`:''}
+      </div>`:''}
+    </div>`;
+
   el.innerHTML=`
-    <div class="sectitle" style="margin-top:0"><span>${esc(c.titel)}</span><a onclick="chatSchliessen()">‹ alle Gespräche</a></div>
+    ${pin}
     <div class="chat">${bubbles}${fehler}</div>
     ${denken}
     <div class="chatbar">
@@ -834,8 +940,7 @@ function renderSpar(){
       <button class="send" onclick="sendeAusFeld()" ${denkt?'disabled':''}>
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2 8.5h11M9 4.5l4 4-4 4" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
-    <div class="sparfoot"><button onclick="chatLoeschen()">Gespräch verwerfen</button></div>
-    ${c.kontext?`<p class="ctxnote">${esc(p.name)} kennt den Kontext deiner Karte.</p>`:''}`;
+    <div class="sparfoot"><button onclick="chatLoeschen()">Gespräch verwerfen</button></div>`;
   const main=document.querySelector('.main');
   setTimeout(()=>main.scrollTo({top:main.scrollHeight,behavior:'smooth'}),60);
 }
@@ -1088,11 +1193,11 @@ async function kartenErzeugen(){
     const liste=JSON.parse(txt.slice(ab,zu+1));
     if(!Array.isArray(liste)||!liste.length)throw new Error('Es kamen keine Karten zurück.');
     neu.vorschau=liste.filter(k=>k&&k.concept&&k.q).map(k=>({
-      fn:String(k.fn||neu.titel).slice(0,60),
-      concept:String(k.concept||'').slice(0,90),
-      core:String(k.core||'').slice(0,400),
-      q:String(k.q||'').slice(0,400),
-      a:String(k.a||'').slice(0,900),
+      fn:kuerze(k.fn||neu.titel,90),
+      concept:kuerze(k.concept,130),
+      core:kuerze(k.core,1400),
+      q:kuerze(k.q,700),
+      a:kuerze(k.a,2000),
       an:true
     }));
     neu.busy='';neu.schritt='vorschau';
@@ -1284,11 +1389,20 @@ function go(p,el,wer){
   if(p==='home'||p==='stats'||p==='paths')updateAll();
   closeDrawer();
 }
+function messeLeiste(){
+  const mb=document.querySelector('.mobilebar');
+  const h=(mb&&mb.offsetHeight)?mb.offsetHeight:0;
+  document.documentElement.style.setProperty('--mbh',h+'px');
+}
+window.addEventListener('resize',messeLeiste);
+
 function openDrawer(){document.getElementById('side').classList.add('open');document.getElementById('scrim').classList.add('show');}
 function closeDrawer(){document.getElementById('side').classList.remove('open');document.getElementById('scrim').classList.remove('show');}
 
 /* ---------------- Start ---------------- */
+messeLeiste();
 document.getElementById('todayDate').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+reparaturLauf();
 updateAll();renderAcct();renderSpar();renderLib();
 
 (async function init(){
