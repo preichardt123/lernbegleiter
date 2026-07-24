@@ -274,6 +274,43 @@
   .qzeile .qb b{font-size:13.5px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis}
   .qzeile .qb small{font-size:12px;color:var(--muted)}
   .qzeile .qx{background:none;border:none;color:var(--faint);font-size:12.5px;font-weight:600;cursor:pointer;padding:6px}
+  .zielbox{padding:18px;background:var(--surface);border:1px dashed var(--accent-line);border-radius:14px}
+  .zielbox h3{font-size:15.5px;font-weight:600;margin-bottom:4px}
+  .zielbox p{font-size:13px;color:var(--muted);line-height:1.5}
+  .pfadkarte{padding:16px 17px;margin-bottom:11px}
+  .pfadkopf{display:flex;align-items:flex-start;gap:12px}
+  .pfadkopf .pb{flex:1;min-width:0}
+  .pfadkopf h4{font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .pfadkopf .pm{font-size:12px;color:var(--muted);margin-top:3px}
+  .fokusknopf{flex:none;font-size:11px;font-weight:600;padding:5px 11px;border-radius:99px;cursor:pointer;
+    background:#F2F4F6;border:1px solid var(--border);color:var(--muted)}
+  .fokusknopf.an{background:var(--accent);border-color:var(--accent);color:#fff}
+  .frist{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;
+    padding:4px 10px;border-radius:99px;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-deep)}
+  .frist.eng{background:#FBF7EE;border-color:#EFE1C6;color:#8A6A2E}
+  .frist.weg{background:#FBF1F0;border-color:#EBD3D0;color:#8C4E46}
+  .etappe{border-top:1px solid var(--border-2);padding:13px 0 3px}
+  .etappe:first-of-type{border-top:none}
+  .etnum{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;
+    background:var(--accent-soft);color:var(--accent-deep);font-size:11px;font-weight:700;margin-right:8px}
+  .ettitel{font-size:14px;font-weight:600}
+  .etwarum{font-size:12.5px;color:var(--muted);margin:4px 0 8px;line-height:1.5}
+  .etkarte{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:13px}
+  .etkarte .ek{width:7px;height:7px;border-radius:2px;flex:none;background:var(--border)}
+  .etkarte .ek.fest{background:var(--ok)}
+  .etkarte .ek.faellig{background:var(--accent)}
+  .etkarte span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .luecke{background:#FBF7EE;border:1px solid #EFE1C6;border-radius:11px;padding:12px 14px;margin-top:12px;
+    font-size:12.5px;color:#6B5A38;line-height:1.55}
+  .luecke b{color:#5A4B2E}
+  .pensum{display:flex;align-items:center;gap:12px;padding:14px 16px}
+  .pensum .pring{width:44px;height:44px;flex:none;position:relative}
+  .pensum .pring svg{transform:rotate(-90deg)}
+  .pensum .pz{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:var(--accent-deep)}
+  .pensum .pt{flex:1;min-width:0}
+  .pensum .pt b{font-size:13.5px;font-weight:600;display:block}
+  .pensum .pt small{font-size:12px;color:var(--muted)}
   .note{margin-top:16px;font-size:12px;color:var(--faint);text-align:center;line-height:1.5}
 
   .authbox{padding:22px;max-width:460px}
@@ -355,7 +392,7 @@
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5C2 3.7 2.7 3 3.5 3H8v10H3.5C2.7 13 2 12.3 2 11.5v-7Z" fill="#fff" opacity=".95"/><path d="M14 4.5c0-.8-.7-1.5-1.5-1.5H8v10h4.5c.8 0 1.5-.7 1.5-1.5v-7Z" fill="#fff" opacity=".6"/></svg></div>
-      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 10 · Thema angepinnt</div></div>
+      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 11 · Lernpfade</div></div>
     </div>
     <button class="newgoal" onclick="go('paths')"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>Neues Lernziel</button>
     <div class="navlabel">Lernen</div>
@@ -403,11 +440,7 @@
           <div class="stat-c card"><div class="k">Gemeistert</div><div class="v"><span id="masterVal">0</span> <small>Karten</small></div></div>
         </div>
         <div class="sectitle">Weiterlernen</div>
-        <div class="card continue">
-          <div class="ci"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 5a1.5 1.5 0 0 1 1.5-1.5H10v15H5.5A1.5 1.5 0 0 1 4 17V5Z" stroke="currentColor" stroke-width="1.4"/><path d="M18 5a1.5 1.5 0 0 0-1.5-1.5H12v15h4.5A1.5 1.5 0 0 0 18 17V5Z" stroke="currentColor" stroke-width="1.4"/></svg></div>
-          <div class="body"><span class="tag">Lernpfad · Öffentliche Finanzen</span><h3>Ziele der Finanzpolitik</h3><p id="continueSub">Deine Karten warten</p><div class="prog"><i id="homeProg" style="width:0%"></i></div></div>
-          <button class="cta" onclick="go('cards')">Los</button>
-        </div>
+        <div id="fokusBereich"></div>
         <div class="sectitle" style="margin-top:20px">Gespräche</div>
         <div class="card sparintro" style="cursor:pointer" onclick="go('spar',null,'dozent')">
           <svg class="mascot"><use href="#dozentin"/></svg>
@@ -425,6 +458,24 @@
     <div class="panel" id="p-cards">
       <div class="topbar"><div class="crumb">Lernen · Öffentliche Finanzen</div><div class="h1">Karteikarten</div></div>
       <div class="pagerest"><div id="cardArea"></div></div>
+    </div>
+
+    <!-- SPARRING -->
+    <div class="panel" id="p-spar">
+      <div class="topbar"><div class="crumb">Gespräche</div><div class="h1" id="sparTitel">Prof. Maeve Jennings</div></div>
+      <div class="pagerest"><div id="sparArea"></div></div>
+    </div>
+
+    <!-- KONTO -->
+    <div class="panel" id="p-acct">
+      <div class="topbar"><div class="crumb">Wissen</div><div class="h1">Konto &amp; Sync</div></div>
+      <div class="pagerest"><div id="acctArea"></div></div>
+    </div>
+
+    <!-- PATHS -->
+    <div class="panel" id="p-paths">
+      <div class="topbar"><div class="crumb">Lernen</div><div class="h1">Lernpfade</div></div>
+      <div class="pagerest"><div id="pathArea"></div></div>
     </div>
 
     <!-- SPARRING -->
@@ -543,6 +594,7 @@ function saveLocal(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){
 let S=load()||{};
 S.rev=S.rev||{};S.streak=S.streak||{count:0,last:null};S.total=S.total||0;S.chats=S.chats||{};
 S.karten=S.karten||{};S.quellen=S.quellen||{};S.tomb=S.tomb||{};
+S.pfade=S.pfade||{};S.fokus=S.fokus||null;S.fokusTs=S.fokusTs||0;S.tag=S.tag||{datum:'',anzahl:0};
 // Altlasten aufräumen: früher wurden Fehlermeldungen im Gespräch mitgespeichert
 Object.values(S.chats).forEach(c=>{if(c&&c.fehler)delete c.fehler;});
 
@@ -664,6 +716,9 @@ function schedule(id,rating){
   const d=new Date();
   if(r.interval===0)d.setMinutes(d.getMinutes()+1);else d.setDate(d.getDate()+r.interval);
   r.due=d.toISOString();r.ts=Date.now();
+  const heute=todayStr();
+  if(S.tag.datum!==heute)S.tag={datum:heute,anzahl:0};
+  S.tag.anzahl++;
   S.rev[id]=r;S.total++;bumpStreak();saveLocal(S);schedulePush();
 }
 
@@ -676,7 +731,7 @@ try{
 
 function mergeStates(local,remote){
   if(!remote)return local;
-  const out={rev:{},streak:{count:0,last:null},total:Math.max(local.total||0,remote.total||0),chats:{},karten:{},quellen:{},tomb:{}};
+  const out={rev:{},streak:{count:0,last:null},total:Math.max(local.total||0,remote.total||0),chats:{},karten:{},quellen:{},tomb:{},pfade:{}};
   const ids=new Set([...Object.keys(local.rev||{}),...Object.keys(remote.rev||{})]);
   ids.forEach(id=>{
     const a=(local.rev||{})[id],b=(remote.rev||{})[id];
@@ -696,6 +751,13 @@ function mergeStates(local,remote){
     return o;
   };
   out.karten=vereine(local.karten,remote.karten);
+  out.pfade=vereine(local.pfade,remote.pfade);
+  // Fokus und Tageszähler: der jüngere Stand gewinnt
+  out.fokusTs=Math.max(local.fokusTs||0,remote.fokusTs||0);
+  out.fokus=((local.fokusTs||0)>=(remote.fokusTs||0))?(local.fokus||null):(remote.fokus||null);
+  const lt=local.tag||{datum:'',anzahl:0},rt=remote.tag||{datum:'',anzahl:0};
+  out.tag=(lt.datum===rt.datum)?{datum:lt.datum,anzahl:Math.max(lt.anzahl||0,rt.anzahl||0)}
+        :((lt.datum||'')>(rt.datum||'')?lt:rt);
   out.quellen=vereine(local.quellen,remote.quellen);
 
   // Löschmarken, damit Gelöschtes nicht vom anderen Gerät zurückkehrt
@@ -707,6 +769,7 @@ function mergeStates(local,remote){
     const t=out.tomb[id];
     if(out.karten[id]&&(out.karten[id].ts||0)<=t)delete out.karten[id];
     if(out.quellen[id]&&(out.quellen[id].ts||0)<=t)delete out.quellen[id];
+    if(out.pfade[id]&&(out.pfade[id].ts||0)<=t)delete out.pfade[id];
   });
   const ls=local.streak||{},rs=remote.streak||{};
   if((ls.last||'')>(rs.last||''))out.streak={count:ls.count||0,last:ls.last||null};
@@ -720,6 +783,8 @@ async function pullMerge(){
   if(error)throw error;
   if(data&&data.state)S=mergeStates(S,data.state);
   S.chats=S.chats||{};S.karten=S.karten||{};S.quellen=S.quellen||{};S.tomb=S.tomb||{};
+  S.pfade=S.pfade||{};S.tag=S.tag||{datum:'',anzahl:0};
+S.pfade=S.pfade||{};S.fokus=S.fokus||null;S.fokusTs=S.fokusTs||0;S.tag=S.tag||{datum:'',anzahl:0};
   reparaturLauf();
   saveLocal(S);lastSync=new Date();
 }
@@ -1031,7 +1096,16 @@ function renderAcct(){
 
 /* ---------------- Karten-Review ---------------- */
 let queue=[],flipped=false;
-function startReview(){queue=dueCards().map(c=>c.id);flipped=false;renderCard();}
+function startReview(){
+  let ids=dueCards().map(c=>c.id);
+  const pf=fokusPfad();
+  if(pf){
+    const folge=pfadKarten(pf);
+    const rang=id=>{const i=folge.indexOf(id);return i<0?99999:i;};
+    ids.sort((a,b)=>rang(a)-rang(b));
+  }
+  queue=ids;flipped=false;renderCard();
+}
 function renderCard(){
   const area=document.getElementById('cardArea');
   if(!queue.length){
@@ -1072,6 +1146,191 @@ function renderCard(){
 }
 function flip(){flipped=true;renderCard();}
 function rate(r){schedule(queue[0],r);queue.shift();flipped=false;renderCard();}
+
+/* ---------------- Lernpfade ---------------- */
+function pfadKarten(p){
+  return ((p&&p.etappen)||[]).reduce((a,e)=>a.concat(e.karten||[]),[]).filter(id=>S.karten[id]);
+}
+function pfadStat(p){
+  const ids=pfadKarten(p);
+  const gesamt=ids.length;
+  const fest=ids.filter(id=>{const r=S.rev[id];return r&&r.interval>=7;}).length;
+  const faellig=ids.filter(id=>isDue(id)).length;
+  let tage=null,pensum=null;
+  if(p&&p.deadline){
+    const d=new Date(p.deadline+'T23:59:59');
+    tage=Math.ceil((d-new Date())/86400000);
+    pensum=tage>0?Math.ceil((gesamt-fest)/tage):(gesamt-fest);
+  }
+  return {ids,gesamt,fest,faellig,tage,pensum,pct:gesamt?Math.round(fest/gesamt*100):0};
+}
+function fokusPfad(){return S.fokus?S.pfade[S.fokus]:null;}
+function fokusSetzen(id){
+  S.fokus=(S.fokus===id)?null:id;S.fokusTs=Date.now();
+  saveLocal(S);schedulePush();renderPaths();updateAll();
+}
+function pfadLoeschen(id){
+  const p=S.pfade[id];if(!p)return;
+  if(!confirm('Lernpfad „'+p.titel+'" entfernen? Deine Karten und dein Fortschritt bleiben erhalten.'))return;
+  delete S.pfade[id];S.tomb[id]=Date.now();
+  if(S.fokus===id){S.fokus=null;S.fokusTs=Date.now();}
+  saveLocal(S);schedulePush();pfadOffen=null;renderPaths();updateAll();
+}
+function tagesPensum(){
+  const p=fokusPfad();if(!p)return null;
+  const st=pfadStat(p);
+  if(st.pensum===null)return null;
+  const heute=(S.tag&&S.tag.datum===todayStr())?S.tag.anzahl:0;
+  return {soll:Math.max(0,st.pensum),ist:heute,tage:st.tage};
+}
+
+let pfadOffen=null,pfadBusy='',pfadFehler=null,pfadVorschau=null,zielText='',zielFrist='';
+
+async function pfadBauen(){
+  const zt=document.getElementById('zielF'),zf=document.getElementById('fristF');
+  zielText=zt?zt.value.trim():'';
+  zielFrist=zf?zf.value:'';
+  if(zielText.length<5){pfadFehler='Beschreib dein Ziel in ein, zwei Sätzen.';renderPaths();return;}
+  if(!kartenListe().length){pfadFehler='Es gibt noch keine Karten, aus denen ein Pfad entstehen könnte. Leg zuerst in der Bibliothek eine Quelle an.';renderPaths();return;}
+  pfadFehler=null;pfadBusy='Dein Pfad wird gebaut …';renderPaths();
+  try{
+    if(!user)throw new Error('Bitte zuerst unter „Konto & Sync" anmelden.');
+    const {data:sess}=await sb.auth.getSession();
+    const token=sess&&sess.session?sess.session.access_token:null;
+    if(!token)throw new Error('Keine gültige Sitzung.');
+    const verzeichnis=kartenListe().map(k=>({
+      id:k.id,concept:k.concept,fn:k.fn,
+      quelle:((S.quellen[k.quelle]||{}).titel||k.src||'')
+    }));
+    const url=SUPABASE_URL.replace(/\/+$/,'')+'/functions/v1/'+FUNKTION;
+    const r=await fetch(url,{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({rolle:'pfad',ziel:zielText,karten:verzeichnis})});
+    const roh=await r.text();
+    let d=null;try{d=JSON.parse(roh);}catch(_){}
+    if(!r.ok)throw new Error('HTTP '+r.status+' — '+((d&&d.fehler)||roh.slice(0,250)));
+    if(d&&d.fehler)throw new Error(d.fehler);
+    let txt=((d&&d.text)||'').replace(/^\s*```(?:json)?/i,'').replace(/```\s*$/,'').trim();
+    const ab=txt.indexOf('{'),zu=txt.lastIndexOf('}');
+    if(ab<0||zu<0)throw new Error('Unerwartete Antwort – kein Pfad erkennbar.');
+    const roh2=JSON.parse(txt.slice(ab,zu+1));
+    const etappen=(roh2.etappen||[]).map(e=>({
+      titel:kuerze(e.titel,90),warum:kuerze(e.warum,240),
+      karten:(e.karten||[]).filter(id=>S.karten[id])
+    })).filter(e=>e.karten.length);
+    if(!etappen.length)throw new Error('Zu diesem Ziel ließ sich aus deinen Karten kein Pfad bilden. Formulier es anders oder leg passendes Material an.');
+    pfadVorschau={titel:kuerze(roh2.titel||zielText,80),beschreibung:kuerze(roh2.beschreibung,260),
+                  ziel:zielText,deadline:zielFrist||'',etappen,
+                  luecken:(roh2.luecken||[]).slice(0,6).map(l=>kuerze(l,90))};
+    pfadBusy='';
+  }catch(e){pfadBusy='';pfadFehler=e.message||String(e);}
+  renderPaths();
+}
+
+function pfadSpeichern(){
+  if(!pfadVorschau)return;
+  const id=neueId('p');
+  S.pfade[id]=Object.assign({id,ts:Date.now()},pfadVorschau);
+  S.fokus=id;S.fokusTs=Date.now();
+  saveLocal(S);schedulePush();
+  pfadVorschau=null;zielText='';zielFrist='';pfadOffen=id;
+  renderPaths();updateAll();
+}
+function pfadVerwerfen(){pfadVorschau=null;renderPaths();}
+
+function etappenHtml(pf,st){
+  return (pf.etappen||[]).map((e,i)=>`
+    <div class="etappe">
+      <div><span class="etnum">${i+1}</span><span class="ettitel">${esc(e.titel)}</span></div>
+      ${e.warum?`<div class="etwarum">${esc(e.warum)}</div>`:''}
+      ${(e.karten||[]).map(id=>{const k=S.karten[id];if(!k)return '';
+        const r=S.rev[id];const fest=r&&r.interval>=7;const fa=isDue(id);
+        return `<div class="etkarte"><span class="ek ${fest?'fest':(fa?'faellig':'')}"></span><span>${esc(k.concept)}</span></div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function renderPaths(){
+  const el=document.getElementById('pathArea');if(!el)return;
+  const f=pfadFehler?`<div class="msgline show err">${esc(pfadFehler)}</div>`:'';
+
+  if(pfadBusy){
+    el.innerHTML=`<div class="card lade"><span class="sp"></span><span>${esc(pfadBusy)}</span></div>${f}`;
+    return;
+  }
+
+  // --- Vorschau eines frisch gebauten Pfades ---
+  if(pfadVorschau){
+    const st=pfadStat(pfadVorschau);
+    el.innerHTML=`
+      <div class="card pfadkarte">
+        <div class="pfadkopf"><div class="pb">
+          <h4>${esc(pfadVorschau.titel)}</h4>
+          <div class="pm">${st.gesamt} Karten in ${pfadVorschau.etappen.length} Etappen${pfadVorschau.deadline?' · bis '+new Date(pfadVorschau.deadline).toLocaleDateString('de-DE'):''}</div>
+        </div></div>
+        <p style="font-size:13.5px;color:#46525C;line-height:1.55;margin-top:10px">${esc(pfadVorschau.beschreibung)}</p>
+        <div style="margin-top:8px">${etappenHtml(pfadVorschau,st)}</div>
+        ${pfadVorschau.luecken.length?`<div class="luecke"><b>Dazu fehlt dir noch Material:</b><br>${pfadVorschau.luecken.map(l=>esc(l)).join(' · ')}</div>`:''}
+      </div>
+      <button class="btn" onclick="pfadSpeichern()">Pfad übernehmen und als Fokus setzen</button>
+      <button class="btn ghost" onclick="pfadBauen()">Neu bauen</button>
+      <button class="btn ghost" onclick="pfadVerwerfen()">Verwerfen</button>${f}`;
+    return;
+  }
+
+  // --- Einzelner Pfad geöffnet ---
+  if(pfadOffen&&S.pfade[pfadOffen]){
+    const pf=S.pfade[pfadOffen],st=pfadStat(pf);
+    const fristKlasse=st.tage===null?'':(st.tage<0?'weg':(st.tage<=3?'eng':''));
+    el.innerHTML=`
+      <div class="sectitle" style="margin-top:0"><span>${esc(pf.titel)}</span><a onclick="pfadOffen=null;renderPaths()">‹ alle Pfade</a></div>
+      <div class="card pfadkarte">
+        <div class="pfadkopf">
+          <div class="pb">
+            <div class="pm">${st.fest} von ${st.gesamt} sitzen · ${st.faellig} fällig</div>
+            <div class="prog" style="margin-top:9px"><i style="width:${st.pct}%"></i></div>
+          </div>
+          <button class="fokusknopf ${S.fokus===pf.id?'an':''}" onclick="fokusSetzen('${pf.id}')">${S.fokus===pf.id?'Fokus ✓':'Fokus setzen'}</button>
+        </div>
+        ${pf.deadline?`<div style="margin-top:12px"><span class="frist ${fristKlasse}">
+          ${st.tage<0?'Frist verstrichen':(st.tage===0?'heute fällig':'noch '+st.tage+' Tag'+(st.tage===1?'':'e'))}
+          ${st.pensum!==null&&st.tage>0?' · '+st.pensum+' Karten/Tag':''}</span></div>`:''}
+        <p style="font-size:13.5px;color:#46525C;line-height:1.55;margin-top:12px">${esc(pf.beschreibung||'')}</p>
+        <div style="margin-top:6px">${etappenHtml(pf,st)}</div>
+        ${(pf.luecken||[]).length?`<div class="luecke"><b>Dazu fehlt dir noch Material:</b><br>${pf.luecken.map(l=>esc(l)).join(' · ')}</div>`:''}
+      </div>
+      <button class="btn" onclick="go('cards')">Jetzt lernen</button>
+      <button class="btn ghost" onclick="pfadLoeschen('${pf.id}')">Pfad entfernen</button>${f}`;
+    return;
+  }
+
+  // --- Übersicht ---
+  const liste=Object.values(S.pfade||{}).sort((a,b)=>(b.ts||0)-(a.ts||0));
+  el.innerHTML=`
+    <div class="zielbox">
+      <h3>Was möchtest du als Nächstes können?</h3>
+      <p>Beschreib dein Ziel in eigenen Worten. Der Begleiter sucht die passenden Karten aus deiner Bibliothek und ordnet sie zu einem Weg.</p>
+      <div class="field"><label>Dein Ziel</label>
+        <textarea id="zielF" class="ta" style="min-height:88px" placeholder="z. B. Ich will die Haushaltsgrundsätze für die Vollzeit sicher draufhaben">${esc(zielText)}</textarea></div>
+      <div class="field"><label>Bis wann? (freiwillig – erzeugt ein Tagespensum)</label>
+        <input id="fristF" type="date" value="${esc(zielFrist)}"></div>
+      <button class="btn" onclick="pfadBauen()">Pfad bauen</button>
+    </div>
+    ${liste.length?`<div class="sectitle">Deine Pfade</div>`+liste.map(pf=>{
+      const st=pfadStat(pf);
+      return `<div class="card pfadkarte" style="cursor:pointer" onclick="pfadOffen='${pf.id}';renderPaths()">
+        <div class="pfadkopf">
+          <div class="pb">
+            <h4>${esc(pf.titel)}</h4>
+            <div class="pm">${st.fest}/${st.gesamt} sitzen · ${(pf.etappen||[]).length} Etappen${pf.deadline?' · bis '+new Date(pf.deadline).toLocaleDateString('de-DE'):''}</div>
+            <div class="prog" style="margin-top:9px"><i style="width:${st.pct}%"></i></div>
+          </div>
+          <span class="fokusknopf ${S.fokus===pf.id?'an':''}" onclick="event.stopPropagation();fokusSetzen('${pf.id}')">${S.fokus===pf.id?'Fokus ✓':'Fokus'}</span>
+        </div>
+      </div>`;
+    }).join(''):'<p class="note">Noch kein Pfad angelegt.</p>'}
+    ${f}`;
+}
 
 /* ---------------- Bibliothek & Kartenerzeugung ---------------- */
 let neu={schritt:'wahl',pdf:null,dateiname:'',seiten:0,von:1,bis:1,text:'',
@@ -1341,6 +1600,57 @@ function renderNeu(){
   }
 }
 
+function renderFokus(){
+  const el=document.getElementById('fokusBereich');if(!el)return;
+  const pf=fokusPfad();
+  const due=dueCards().length;
+
+  if(!pf){
+    const anz=Object.keys(S.pfade||{}).length;
+    el.innerHTML=`
+      <div class="card continue">
+        <div class="ci"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 4.5h12M5 11h12M5 17.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="body">
+          <span class="tag">Ohne Fokus</span>
+          <h3>${due?due+(due===1?' Karte':' Karten')+' fällig':'Alles wiederholt'}</h3>
+          <p>${anz?'Setz einen Pfad auf Fokus – dann kommen seine Karten zuerst.':'Leg ein Lernziel an, dann bekommst du einen Weg statt einer Kartensammlung.'}</p>
+        </div>
+        <button class="cta" onclick="${due?"go('cards')":"go('paths')"}">${due?'Los':'Ziel setzen'}</button>
+      </div>`;
+    return;
+  }
+
+  const st=pfadStat(pf);
+  const pen=tagesPensum();
+  const fristKlasse=st.tage===null?'':(st.tage<0?'weg':(st.tage<=3?'eng':''));
+  let ring='';
+  if(pen&&pen.soll>0){
+    const anteil=Math.min(1,pen.ist/pen.soll);
+    const u=2*Math.PI*18;
+    ring=`<div class="card pensum" style="margin-bottom:12px">
+      <div class="pring"><svg width="44" height="44" viewBox="0 0 44 44">
+        <circle cx="22" cy="22" r="18" fill="none" stroke="#EDEFF2" stroke-width="5"/>
+        <circle cx="22" cy="22" r="18" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"
+          stroke-dasharray="${u}" stroke-dashoffset="${u*(1-anteil)}"/>
+      </svg><span class="pz">${pen.ist}</span></div>
+      <div class="pt"><b>${pen.ist>=pen.soll?'Tagespensum geschafft':'Heute noch '+(pen.soll-pen.ist)+' von '+pen.soll}</b>
+      <small>${st.tage<0?'Frist ist verstrichen':(st.tage===0?'letzter Tag':'noch '+st.tage+' Tage bis zur Frist')}</small></div>
+    </div>`;
+  }
+
+  el.innerHTML=ring+`
+    <div class="card continue">
+      <div class="ci"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 5a1.5 1.5 0 0 1 1.5-1.5H10v15H5.5A1.5 1.5 0 0 1 4 17V5Z" stroke="currentColor" stroke-width="1.4"/><path d="M18 5a1.5 1.5 0 0 0-1.5-1.5H12v15h4.5A1.5 1.5 0 0 0 18 17V5Z" stroke="currentColor" stroke-width="1.4"/></svg></div>
+      <div class="body">
+        <span class="tag">Fokus · Lernpfad</span>
+        <h3>${esc(pf.titel)}</h3>
+        <p>${st.fest} von ${st.gesamt} sitzen${st.faellig?' · '+st.faellig+' fällig':' · nichts fällig'}${pf.deadline&&st.tage!==null&&st.tage>=0?' · noch '+st.tage+' Tage':''}</p>
+        <div class="prog"><i style="width:${st.pct}%"></i></div>
+      </div>
+      <button class="cta" onclick="go('cards')">${st.faellig?'Los':'Ansehen'}</button>
+    </div>`;
+}
+
 /* ---------------- Dashboard ---------------- */
 function updateAll(){
   const due=dueCards().length,mast=masteredCount();
@@ -1348,7 +1658,7 @@ function updateAll(){
   const seen=alle.filter(c=>S.rev[c.id]).length;
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   set('dueBadge',due);set('dueVal',due);set('streakVal',S.streak.count);set('masterVal',mast);
-  set('continueSub',due?`${due} ${due===1?'Karte':'Karten'} fällig`:'Alles wiederholt – top');
+  renderFokus();
   const pct=alle.length?Math.round(seen/alle.length*100):0;
   const hp=document.getElementById('homeProg');if(hp)hp.style.width=pct+'%';
   const pp=document.getElementById('pathProg');if(pp)pp.style.width=pct+'%';
@@ -1385,8 +1695,9 @@ function go(p,el,wer){
   if(p==='spar')renderSpar();
   if(p==='acct')renderAcct();
   if(p==='lib')renderLib();
+  if(p==='paths')renderPaths();
   if(p==='neu')renderNeu();
-  if(p==='home'||p==='stats'||p==='paths')updateAll();
+  if(p==='home'||p==='stats')updateAll();
   closeDrawer();
 }
 function messeLeiste(){
