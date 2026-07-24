@@ -311,6 +311,45 @@
   .pensum .pt{flex:1;min-width:0}
   .pensum .pt b{font-size:13.5px;font-weight:600;display:block}
   .pensum .pt small{font-size:12px;color:var(--muted)}
+  .stapel{padding:15px 16px;margin-bottom:10px;display:flex;align-items:center;gap:13px;cursor:pointer;position:relative}
+  .stapel:active{background:#FAFBFC}
+  .stapel .si{width:40px;height:40px;border-radius:11px;flex:none;display:flex;align-items:center;
+    justify-content:center;background:var(--accent-soft);color:var(--accent)}
+  .stapel .sb{flex:1;min-width:0}
+  .stapel .sb h4{font-size:14.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .stapel .sb .sm{font-size:12px;color:var(--muted);margin-top:2px}
+  .stapel .sb .prog{margin-top:8px}
+  .stapel .sz{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+  .stapel .pill2{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;
+    background:var(--accent);color:#fff}
+  .stapel .pill2.leer{background:#F2F4F6;color:var(--faint)}
+  .stapel.gross{background:var(--accent-soft);border-color:var(--accent-line)}
+  .sesskopf{position:sticky;top:var(--mbh,0px);z-index:6;background:var(--surface);border:1px solid var(--border);
+    border-radius:13px;padding:10px 13px;margin-bottom:16px;display:flex;align-items:center;gap:11px;
+    box-shadow:0 6px 18px -12px rgba(40,50,60,.4)}
+  .sesskopf .sback{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:#fff;
+    color:var(--muted);font-size:17px;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;padding:0 2px 2px 0}
+  .sesskopf .st{flex:1;min-width:0}
+  .sesskopf .st b{font-size:13.5px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sesskopf .st small{font-size:11.5px;color:var(--faint)}
+  .sessbar{height:4px;border-radius:99px;background:#EDEFF2;margin-top:6px;overflow:hidden}
+  .sessbar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+  .qmenu{position:relative}
+  .qpunkte{background:none;border:1px solid var(--border);border-radius:9px;width:32px;height:32px;
+    color:var(--muted);cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .qpunkte:active{background:var(--accent-soft)}
+  .qliste{position:absolute;right:0;top:38px;z-index:20;background:var(--surface);border:1px solid var(--border);
+    border-radius:12px;box-shadow:0 14px 34px -14px rgba(40,50,60,.42);min-width:212px;overflow:hidden}
+  .qliste button{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;text-align:left;
+    padding:11px 14px;font-size:13.5px;color:var(--text);cursor:pointer}
+  .qliste button:hover{background:#F4F6F8}
+  .qliste button svg{color:var(--faint);flex:none}
+  .qliste button.rot{color:var(--danger)}
+  .qliste button.rot svg{color:var(--danger)}
+  .qliste button[disabled]{opacity:.4;cursor:default}
+  .qliste .trenn{height:1px;background:var(--border-2)}
+  .lesetext{white-space:pre-wrap;font-size:14px;line-height:1.7;color:#333B43;
+    padding:18px;max-height:none;word-wrap:break-word}
   .note{margin-top:16px;font-size:12px;color:var(--faint);text-align:center;line-height:1.5}
 
   .authbox{padding:22px;max-width:460px}
@@ -392,7 +431,7 @@
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5C2 3.7 2.7 3 3.5 3H8v10H3.5C2.7 13 2 12.3 2 11.5v-7Z" fill="#fff" opacity=".95"/><path d="M14 4.5c0-.8-.7-1.5-1.5-1.5H8v10h4.5c.8 0 1.5-.7 1.5-1.5v-7Z" fill="#fff" opacity=".6"/></svg></div>
-      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 11 · Lernpfade</div></div>
+      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 13 · Stapel & Bibliothek</div></div>
     </div>
     <button class="newgoal" onclick="go('paths')"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>Neues Lernziel</button>
     <div class="navlabel">Lernen</div>
@@ -519,6 +558,12 @@
     <div class="panel" id="p-lib">
       <div class="topbar"><div class="crumb">Wissen</div><div class="h1">Bibliothek</div></div>
       <div class="pagerest"><div id="libArea"></div></div>
+    </div>
+
+    <!-- QUELLE LESEN -->
+    <div class="panel" id="p-lesen">
+      <div class="topbar"><div class="crumb">Wissen · Bibliothek</div><div class="h1" id="leseTitel">Quelle lesen</div></div>
+      <div class="pagerest"><div id="leseArea"></div></div>
     </div>
 
     <!-- QUELLE HINZUFÜGEN -->
@@ -1096,35 +1141,127 @@ function renderAcct(){
 
 /* ---------------- Karten-Review ---------------- */
 let queue=[],flipped=false;
-function startReview(){
+/* Dringlichkeit einer Karte: fällig < nie gesehen < wackelig < sitzt */
+function rangVon(id){
+  const r=S.rev[id];
+  if(isDue(id))return 0;
+  if(!r)return 1;
+  if(r.interval<7)return 2;
+  return 3;
+}
+function sessionIds(typ,key){
+  if(typ==='pfad'){
+    const pf=S.pfade[key];if(!pf)return [];
+    const folge=pfadKarten(pf);
+    const offen=folge.filter(id=>rangVon(id)<3);
+    const basis=offen.length?offen:folge.slice();
+    return basis.sort((a,b)=>rangVon(a)-rangVon(b)||folge.indexOf(a)-folge.indexOf(b));
+  }
+  if(typ==='stapel'){
+    const ids=kartenListe().filter(k=>(k.fn||'Ohne Einordnung')===key).map(k=>k.id);
+    const offen=ids.filter(id=>rangVon(id)<3);
+    return (offen.length?offen:ids).sort((a,b)=>rangVon(a)-rangVon(b));
+  }
+  if(typ==='quelle'){
+    const ids=kartenDerQuelle(key).map(k=>k.id);
+    const offen=ids.filter(id=>rangVon(id)<3);
+    return (offen.length?offen:ids).sort((a,b)=>rangVon(a)-rangVon(b));
+  }
+  // 'faellig' – alles Fällige, Fokuspfad zuerst
   let ids=dueCards().map(c=>c.id);
   const pf=fokusPfad();
   if(pf){
     const folge=pfadKarten(pf);
-    const rang=id=>{const i=folge.indexOf(id);return i<0?99999:i;};
-    ids.sort((a,b)=>rang(a)-rang(b));
+    const r=id=>{const i=folge.indexOf(id);return i<0?99999:i;};
+    ids.sort((a,b)=>r(a)-r(b));
   }
-  queue=ids;flipped=false;renderCard();
+  return ids;
 }
+let sess=null;
+function starteEinheit(typ,key,titel){
+  const ids=sessionIds(typ,key);
+  sess={typ,key,titel:titel||'Wiederholung',gesamt:ids.length,erledigt:0};
+  queue=ids;flipped=false;
+  go('cards');
+}
+function einheitBeenden(){sess=null;queue=[];flipped=false;renderCards();}
+function startReview(){ if(!sess)renderCards(); else renderCard(); }
+function renderCards(){
+  const area=document.getElementById('cardArea');if(!area)return;
+  if(sess){renderCard();return;}
+
+  const alle=kartenListe();
+  const due=dueCards().length;
+  const pf=fokusPfad();
+
+  // Nach Einordnung stapeln
+  const gruppen={};
+  alle.forEach(k=>{
+    const g=k.fn||'Ohne Einordnung';
+    (gruppen[g]=gruppen[g]||[]).push(k);
+  });
+  const stapel=Object.entries(gruppen).map(([g,ks])=>{
+    const faellig=ks.filter(k=>isDue(k.id)).length;
+    const fest=ks.filter(k=>{const r=S.rev[k.id];return r&&r.interval>=7;}).length;
+    const quelle=((S.quellen[ks[0].quelle]||{}).titel)||'';
+    return {g,anz:ks.length,faellig,fest,quelle,pct:Math.round(fest/ks.length*100)};
+  }).sort((a,b)=>b.faellig-a.faellig||a.g.localeCompare(b.g));
+
+  area.innerHTML=`
+    <div class="card stapel gross" onclick="starteEinheit('faellig',null,'Alles Fällige')">
+      <div class="si"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 5.5V10l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="sb"><h4>Fällig heute</h4><div class="sm">${due?'Wiederholung über alle Themen':'Nichts fällig – du bist durch'}</div></div>
+      <div class="sz"><span class="pill2 ${due?'':'leer'}">${due}</span></div>
+    </div>
+
+    ${pf?`<div class="card stapel" onclick="starteEinheit('pfad','${pf.id}','${esc(pf.titel).replace(/'/g,"\\'")}')">
+      <div class="si"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 4h11M5 10h11M5 16h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2.5" cy="4" r="1.3" fill="currentColor"/><circle cx="2.5" cy="10" r="1.3" fill="currentColor"/><circle cx="2.5" cy="16" r="1.3" fill="currentColor"/></svg></div>
+      <div class="sb"><h4>${esc(pf.titel)}</h4><div class="sm">Dein Fokus-Lernpfad</div>
+        <div class="prog"><i style="width:${pfadStat(pf).pct}%"></i></div></div>
+      <div class="sz"><span class="pill2 ${pfadStat(pf).faellig?'':'leer'}">${pfadStat(pf).faellig}</span></div>
+    </div>`:''}
+
+    <div class="sectitle">Nach Thema${alle.length?' · '+alle.length+' Karten':''}</div>
+    ${stapel.length?stapel.map(t=>`
+      <div class="card stapel" onclick="starteEinheit('stapel','${esc(t.g).replace(/'/g,"\\'")}','${esc(t.g).replace(/'/g,"\\'")}')">
+        <div class="si"><svg width="19" height="19" viewBox="0 0 19 19" fill="none"><rect x="2.5" y="5" width="14" height="10" rx="1.6" stroke="currentColor" stroke-width="1.4"/><path d="M5 2.8h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="sb"><h4>${esc(t.g)}</h4>
+          <div class="sm">${t.anz} Karten · ${t.fest} sitzen${t.quelle?' · '+esc(kuerze(t.quelle,34)):''}</div>
+          <div class="prog"><i style="width:${t.pct}%"></i></div></div>
+        <div class="sz"><span class="pill2 ${t.faellig?'':'leer'}">${t.faellig}</span></div>
+      </div>`).join(''):'<p class="note">Noch keine Karten. Leg in der Bibliothek eine Quelle an.</p>'}
+    <p class="note">Die Zahl rechts zeigt, wie viele Karten des Stapels heute fällig sind.</p>`;
+}
+
 function renderCard(){
   const area=document.getElementById('cardArea');
+  const kopf=sess?`
+    <div class="sesskopf">
+      <button class="sback" onclick="einheitBeenden()" title="Zur Übersicht">‹</button>
+      <div class="st"><b>${esc(sess.titel)}</b>
+        <small>${sess.erledigt} von ${sess.gesamt} bearbeitet</small>
+        <div class="sessbar"><i style="width:${sess.gesamt?Math.round(sess.erledigt/sess.gesamt*100):0}%"></i></div></div>
+    </div>`:'';
+
   if(!queue.length){
-    area.innerHTML=`<div class="empty"><svg class="mascot lg"><use href="#adorno"/></svg>
-      <h3>Für heute durch.</h3><p>Alle fälligen Karten sitzen. Adorno nickt widerwillig anerkennend – oder du forderst ihn zum Streit.</p>
-      <button class="btn" style="max-width:240px;margin:16px auto 0" onclick="go('spar')">Diskussion öffnen</button></div>`;
+    area.innerHTML=kopf+`<div class="empty"><svg class="mascot lg"><use href="#dozentin"/></svg>
+      <h3>${sess&&sess.erledigt?'Einheit geschafft':'Nichts offen'}</h3>
+      <p>${sess&&sess.erledigt?sess.erledigt+' Karten bearbeitet. Weiter so – der Rhythmus ist wichtiger als die Menge.':'Hier ist gerade nichts fällig.'}</p>
+      <button class="btn" style="max-width:240px;margin:16px auto 0" onclick="einheitBeenden()">Zur Übersicht</button>
+      <button class="btn ghost" style="max-width:240px;margin:9px auto 0" onclick="go('spar')">Stattdessen diskutieren</button></div>`;
     updateAll();return;
   }
   const c=karteById(queue[0]);
   if(!c){queue.shift();renderCard();return;}
   if(!flipped){
-    area.innerHTML=`<div class="card fcard">
+    area.innerHTML=kopf+`<div class="card fcard">
       <div class="eyebrow">${c.fn}</div><div class="concept">${c.concept}</div>
       <div class="core">${kernHtml(c.core)}</div>
       <div class="test"><div class="tl">Selbsttest · Verstehen, nicht Auswendig</div><div class="q">${c.q}</div></div>
       <button class="primary" onclick="flip()">Antwort aufdecken</button>
-      <div class="meta">📎 ${c.src} · noch ${queue.length} ${queue.length===1?'Karte':'Karten'}</div></div>`;
+      <div class="meta">${c.unbelegt?'<span class="soonbadge" style="margin-right:6px">ungeprüft</span>':'📎 '} ${esc(c.src)} · noch ${queue.length} ${queue.length===1?'Karte':'Karten'}</div></div>`;
   }else{
-    area.innerHTML=`<div class="card fcard">
+    area.innerHTML=kopf+`<div class="card fcard">
       <div class="eyebrow">${c.fn}</div><div class="concept">${c.concept}</div>
       <div class="test"><div class="tl">Frage</div><div class="q">${c.q}</div></div>
       <div class="answer">${c.a}</div>
@@ -1145,7 +1282,7 @@ function renderCard(){
   }
 }
 function flip(){flipped=true;renderCard();}
-function rate(r){schedule(queue[0],r);queue.shift();flipped=false;renderCard();}
+function rate(r){schedule(queue[0],r);queue.shift();if(sess)sess.erledigt++;flipped=false;renderCard();}
 
 /* ---------------- Lernpfade ---------------- */
 function pfadKarten(p){
@@ -1238,6 +1375,38 @@ function pfadSpeichern(){
 }
 function pfadVerwerfen(){pfadVorschau=null;renderPaths();}
 
+async function lueckeFuellen(pid,i){
+  const pf=S.pfade[pid];if(!pf)return;
+  const thema=(pf.luecken||[])[i];if(!thema)return;
+  pfadFehler=null;pfadBusy='Material zu „'+thema+'" wird erstellt …';renderPaths();
+  try{
+    if(!user)throw new Error('Bitte zuerst unter „Konto & Sync" anmelden.');
+    const {data:sess2}=await sb.auth.getSession();
+    const token=sess2&&sess2.session?sess2.session.access_token:null;
+    if(!token)throw new Error('Keine gültige Sitzung.');
+    const url=SUPABASE_URL.replace(/\/+$/,'')+'/functions/v1/'+FUNKTION;
+    const r=await fetch(url,{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({rolle:'luecke',thema,ziel:pf.ziel||pf.titel,anzahl:6})});
+    const roh=await r.text();
+    let d=null;try{d=JSON.parse(roh);}catch(_){}
+    if(!r.ok)throw new Error('HTTP '+r.status+' — '+((d&&d.fehler)||roh.slice(0,250)));
+    if(d&&d.fehler)throw new Error(d.fehler);
+    let txt=((d&&d.text)||'').replace(/^\s*```(?:json)?/i,'').replace(/```\s*$/,'').trim();
+    const ab=txt.indexOf('['),zu=txt.lastIndexOf(']');
+    if(ab<0||zu<0)throw new Error('Unerwartete Antwort – kein Kartensatz erkennbar.');
+    const liste=JSON.parse(txt.slice(ab,zu+1));
+    if(!Array.isArray(liste)||!liste.length)throw new Error('Es kamen keine Karten zurück.');
+    neu={schritt:'vorschau',pdf:null,dateiname:'',seiten:0,von:1,bis:1,text:'',
+         titel:kuerze(thema,80),fokus:'',anzahl:6,busy:'',fehler:null,quelleId:null,unbelegt:true,
+         vorschau:liste.filter(k=>k&&k.concept&&k.q).map(k=>({
+           fn:kuerze(k.fn||thema,90),concept:kuerze(k.concept,130),core:kuerze(k.core,1400),
+           q:kuerze(k.q,700),a:kuerze(k.a,2000),an:true}))};
+    pfadBusy='';go('neu');
+  }catch(e){pfadBusy='';pfadFehler=e.message||String(e);}
+  renderPaths();
+}
+
 function etappenHtml(pf,st){
   return (pf.etappen||[]).map((e,i)=>`
     <div class="etappe">
@@ -1297,9 +1466,17 @@ function renderPaths(){
           ${st.pensum!==null&&st.tage>0?' · '+st.pensum+' Karten/Tag':''}</span></div>`:''}
         <p style="font-size:13.5px;color:#46525C;line-height:1.55;margin-top:12px">${esc(pf.beschreibung||'')}</p>
         <div style="margin-top:6px">${etappenHtml(pf,st)}</div>
-        ${(pf.luecken||[]).length?`<div class="luecke"><b>Dazu fehlt dir noch Material:</b><br>${pf.luecken.map(l=>esc(l)).join(' · ')}</div>`:''}
+        ${(pf.luecken||[]).length?`<div class="luecke"><b>Dazu fehlt dir noch Material:</b>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-top:9px">
+          ${pf.luecken.map((l,i)=>`<div style="display:flex;align-items:center;gap:9px">
+            <span style="flex:1;min-width:0">${esc(l)}</span>
+            <button class="fokusknopf" style="background:#fff;border-color:#EFE1C6;color:#8A6A2E"
+              onclick="event.stopPropagation();lueckeFuellen('${pf.id}',${i})">Karten erstellen</button></div>`).join('')}
+          </div>
+          <div style="margin-top:10px;font-size:11.5px;opacity:.85">Diese Karten entstünden ohne eigene Quelle – gut für die Systematik, aber Fundstellen bitte am Gesetzestext prüfen. Besser ist es, das Material in die Bibliothek einzulesen.</div>
+        </div>`:''}
       </div>
-      <button class="btn" onclick="go('cards')">Jetzt lernen</button>
+      <button class="btn" onclick="starteEinheit('pfad','${pf.id}','${esc(pf.titel).replace(/'/g,"\\'")}')">Diesen Pfad lernen</button>
       <button class="btn ghost" onclick="pfadLoeschen('${pf.id}')">Pfad entfernen</button>${f}`;
     return;
   }
@@ -1336,6 +1513,56 @@ function renderPaths(){
 let neu={schritt:'wahl',pdf:null,dateiname:'',seiten:0,von:1,bis:1,text:'',
          titel:'',fokus:'',anzahl:8,vorschau:null,busy:'',fehler:null,quelleId:null};
 
+let libMenu=null,leseQuelle=null;
+function libMenuUm(qid){libMenu=(libMenu===qid)?null:qid;renderLib();}
+
+function quelleLesen(qid){
+  leseQuelle=qid;libMenu=null;go('lesen');
+}
+function renderLesen(){
+  const el=document.getElementById('leseArea');if(!el)return;
+  const q=(S.quellen||{})[leseQuelle];
+  const t=document.getElementById('leseTitel');
+  if(t)t.textContent=q?q.titel:'Quelle lesen';
+  if(!q){el.innerHTML='<p class="note">Quelle nicht gefunden.</p>';return;}
+  if(!q.text){
+    el.innerHTML=`<div class="card simple"><p style="font-size:13.5px;color:var(--muted);line-height:1.6">
+      Von dieser Quelle ist kein Text gespeichert – sie wurde eingelesen, bevor die App den Text behalten hat.
+      Wenn du sie lesen oder daraus nachgenerieren möchtest, leg sie einmal neu an.</p>
+      <button class="btn" onclick="neuStarten()">Quelle neu einlesen</button>
+      <button class="btn ghost" onclick="go('lib')">Zurück</button></div>`;
+    return;
+  }
+  el.innerHTML=`
+    <div class="sectitle" style="margin-top:0"><span>${q.typ}${q.seiten?' · S. '+esc(q.seiten):''} · ${q.text.length.toLocaleString('de-DE')} Zeichen</span>
+      <a onclick="go('lib')">‹ Bibliothek</a></div>
+    <div class="card"><div class="lesetext">${esc(q.text)}</div></div>
+    <button class="btn" onclick="quelleNachgenerieren('${q.id}')">Weitere Karten aus dieser Quelle</button>
+    <button class="btn ghost" onclick="go('lib')">Zurück zur Bibliothek</button>`;
+}
+
+function quelleNachgenerieren(qid){
+  const q=(S.quellen||{})[qid];if(!q)return;
+  libMenu=null;
+  if(!q.text){alert('Von dieser Quelle ist kein Text gespeichert. Bitte einmal neu einlesen.');return;}
+  neu={schritt:'bereit',pdf:null,dateiname:'',seiten:0,von:1,bis:1,
+       text:q.text,titel:q.titel,fokus:'',anzahl:8,vorschau:null,busy:'',fehler:null,quelleId:qid};
+  go('neu');
+}
+
+function quelleHerunterladen(qid){
+  const q=(S.quellen||{})[qid];if(!q)return;
+  libMenu=null;renderLib();
+  if(!q.text){alert('Von dieser Quelle ist kein Text gespeichert.');return;}
+  const kopf='# '+q.titel+'\n\n_'+q.typ+(q.seiten?' · Seiten '+q.seiten:'')+'_\n\n---\n\n';
+  const blob=new Blob([kopf+q.text],{type:'text/markdown;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=q.titel.replace(/[^\w\säöüÄÖÜß-]/g,'').trim().slice(0,60)+'.md';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
+}
+
 function renderLib(){
   const el=document.getElementById('libArea');if(!el)return;
   const qs=Object.values(S.quellen||{}).sort((a,b)=>(b.ts||0)-(a.ts||0));
@@ -1346,18 +1573,37 @@ function renderLib(){
       <div class="stat-c card"><div class="k">Quellen</div><div class="v">${qs.length}</div></div>
     </div>
     <div class="sectitle">Deine Quellen</div>
-    ${qs.length?qs.map(q=>`
-      <div class="card qzeile">
+    ${qs.length?qs.map(q=>{
+      const hatText=!!q.text;
+      return `<div class="card qzeile">
         <div class="qi">${q.typ==='Text'
           ?'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4 3.5h10M4 7h10M4 10.5h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>'
           :'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4 3h9a1 1 0 0 1 1 1v11l-2.5-1.5L9 15l-2.5-1.5L4 15V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>'}</div>
-        <div class="qb"><b>${esc(q.titel)}</b><small>${q.typ}${q.seiten?' · S. '+q.seiten:''} · ${kartenDerQuelle(q.id).length} Karten</small></div>
-        <button class="qx" onclick="quelleLoeschen('${q.id}')">entfernen</button>
-      </div>`).join(''):'<div class="card simple" style="text-align:center;color:var(--muted);font-size:13.5px">Noch keine Quelle hinterlegt.</div>'}
+        <div class="qb" style="cursor:pointer" onclick="starteEinheit('quelle','${q.id}','${esc(q.titel).replace(/'/g,"\\'")}')">
+          <b>${esc(q.titel)}</b>
+          <small>${q.typ}${q.seiten?' · S. '+esc(q.seiten):''} · ${kartenDerQuelle(q.id).length} Karten${hatText?'':' · Text nicht gespeichert'}</small></div>
+        <div class="qmenu">
+          <button class="qpunkte" onclick="event.stopPropagation();libMenuUm('${q.id}')" title="Mehr">⋯</button>
+          ${libMenu===q.id?`<div class="qliste">
+            <button ${hatText?'':'disabled'} onclick="event.stopPropagation();quelleLesen('${q.id}')">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1.5 8s2.4-4.2 6.5-4.2S14.5 8 14.5 8s-2.4 4.2-6.5 4.2S1.5 8 1.5 8Z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/></svg>Lesen</button>
+            <button onclick="event.stopPropagation();starteEinheit('quelle','${q.id}','${esc(q.titel).replace(/'/g,"\\'")}')">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 2.5h7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Karten lernen</button>
+            <button ${hatText?'':'disabled'} onclick="event.stopPropagation();quelleNachgenerieren('${q.id}')">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Neue Karten erstellen</button>
+            <button ${hatText?'':'disabled'} onclick="event.stopPropagation();quelleHerunterladen('${q.id}')">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7.5 8 10.5l3-3M3 13h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Als Text herunterladen</button>
+            <div class="trenn"></div>
+            <button class="rot" onclick="event.stopPropagation();quelleLoeschen('${q.id}')">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Entfernen</button>
+          </div>`:''}
+        </div>
+      </div>`;
+    }).join(''):'<div class="card simple" style="text-align:center;color:var(--muted);font-size:13.5px">Noch keine Quelle hinterlegt.</div>'}
     <div class="card path add" style="margin-top:12px;cursor:pointer" onclick="neuStarten()">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       Quelle hinzufügen und Karten erzeugen</div>
-    <p class="note">Aus jeder Quelle lassen sich beliebig oft neue Karten erzeugen.</p>`;
+    <p class="note">Tipp auf eine Quelle startet eine Lerneinheit daraus. Über ⋯ öffnest du das Menü.</p>`;
 }
 
 function quelleLoeschen(qid){
@@ -1478,15 +1724,19 @@ function kartenUebernehmen(){
   let qid=neu.quelleId;
   if(!qid){
     qid=neueId('q');
-    S.quellen[qid]={id:qid,titel:neu.titel||'Ohne Titel',typ:neu.seiten?'PDF':'Text',
-                    seiten:neu.seiten?(neu.von+'–'+neu.bis):'',ts:jetzt};
+    S.quellen[qid]={id:qid,titel:neu.titel||'Ohne Titel',
+                    typ:neu.unbelegt?'Ohne Beleg':(neu.seiten?'PDF':'Text'),
+                    unbelegt:!!neu.unbelegt,
+                    seiten:neu.seiten?(neu.von+'–'+neu.bis):'',
+                    text:String(neu.text||'').slice(0,60000),ts:jetzt};
     neu.quelleId=qid;
   }
   gewaehlt.forEach(k=>{
     const id=neueId('k');
     S.karten[id]={id,fn:k.fn,concept:k.concept,core:k.core,q:k.q,a:k.a,
-                  src:(S.quellen[qid].titel+(neu.seiten?' S.'+neu.von+'–'+neu.bis:'')).slice(0,90),
-                  quelle:qid,ts:jetzt};
+                  src:(neu.unbelegt?'ohne Quelle · '+S.quellen[qid].titel
+                       :(S.quellen[qid].titel+(neu.seiten?' S.'+neu.von+'–'+neu.bis:''))).slice(0,90),
+                  unbelegt:!!neu.unbelegt,quelle:qid,ts:jetzt};
   });
   saveLocal(S);schedulePush();
   neu.schritt='fertig';neu.uebernommen=gewaehlt.length;renderNeu();
@@ -1569,6 +1819,9 @@ function renderNeu(){
   if(neu.schritt==='vorschau'){
     const an=(neu.vorschau||[]).filter(k=>k.an).length;
     el.innerHTML=`
+      ${neu.unbelegt?`<div class="warnbox" style="margin-top:0;margin-bottom:14px"><b>Ohne eigene Quelle erstellt.</b>
+        Diese Karten stammen aus dem Allgemeinwissen der KI, nicht aus deinem Material. Für Grundlagen und Systematik ist das brauchbar –
+        <b>Paragrafen, Fristen und Zahlen solltest du am Gesetzestext prüfen</b>, bevor du dich darauf verlässt.</div>`:''}
       <div class="sectitle" style="margin-top:0"><span>${neu.vorschau.length} Karten vorgeschlagen · ${an} ausgewählt</span>
         <a onclick="vorschauAlle(${an===neu.vorschau.length?'false':'true'})">${an===neu.vorschau.length?'keine':'alle'}</a></div>
       ${neu.vorschau.map((k,i)=>`
@@ -1592,7 +1845,7 @@ function renderNeu(){
       <div class="empty"><svg class="mascot lg"><use href="#dozentin"/></svg>
         <h3>${neu.uebernommen} Karten übernommen</h3>
         <p>Sie sind ab sofort in deiner Wiederholung – und auf dem iPad ebenso, sobald abgeglichen wurde.</p>
-        <button class="btn" style="max-width:240px;margin:16px auto 0" onclick="go('cards')">Gleich lernen</button>
+        <button class="btn" style="max-width:240px;margin:16px auto 0" onclick="go('cards')">Zu den Karten</button>
         <button class="btn ghost" style="max-width:240px;margin:9px auto 0" onclick="neuZu('bereit')">Weitere aus diesem Text</button>
         <button class="btn ghost" style="max-width:240px;margin:9px auto 0" onclick="go('lib')">Zur Bibliothek</button>
       </div>`;
@@ -1615,7 +1868,7 @@ function renderFokus(){
           <h3>${due?due+(due===1?' Karte':' Karten')+' fällig':'Alles wiederholt'}</h3>
           <p>${anz?'Setz einen Pfad auf Fokus – dann kommen seine Karten zuerst.':'Leg ein Lernziel an, dann bekommst du einen Weg statt einer Kartensammlung.'}</p>
         </div>
-        <button class="cta" onclick="${due?"go('cards')":"go('paths')"}">${due?'Los':'Ziel setzen'}</button>
+        <button class="cta" onclick="${due?"starteEinheit('faellig',null,'Alles Fällige')":"go('paths')"}">${due?'Los':'Ziel setzen'}</button>
       </div>`;
     return;
   }
@@ -1647,7 +1900,7 @@ function renderFokus(){
         <p>${st.fest} von ${st.gesamt} sitzen${st.faellig?' · '+st.faellig+' fällig':' · nichts fällig'}${pf.deadline&&st.tage!==null&&st.tage>=0?' · noch '+st.tage+' Tage':''}</p>
         <div class="prog"><i style="width:${st.pct}%"></i></div>
       </div>
-      <button class="cta" onclick="go('cards')">${st.faellig?'Los':'Ansehen'}</button>
+      <button class="cta" onclick="starteEinheit('pfad','${pf.id}','${esc(pf.titel).replace(/'/g,"\\'")}')">Lernen</button>
     </div>`;
 }
 
@@ -1679,8 +1932,9 @@ function updateAll(){
 }
 
 /* ---------------- Navigation ---------------- */
-const titles={home:'Heute',cards:'Karteikarten',paths:'Lernpfade',spar:'Gespräch',pod:'Audio',lib:'Bibliothek',neu:'Quelle hinzufügen',stats:'Fortschritt',acct:'Konto & Sync'};
+const titles={home:'Heute',cards:'Karteikarten',paths:'Lernpfade',spar:'Gespräch',pod:'Audio',lib:'Bibliothek',neu:'Quelle hinzufügen',lesen:'Quelle lesen',stats:'Fortschritt',acct:'Konto & Sync'};
 function go(p,el,wer){
+  libMenu=null;
   if(p==='spar'&&wer&&wer!==partner){partner=wer;chatKey=null;letzterFehler=null;}
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
   document.getElementById('p-'+p).classList.add('on');
@@ -1697,6 +1951,7 @@ function go(p,el,wer){
   if(p==='lib')renderLib();
   if(p==='paths')renderPaths();
   if(p==='neu')renderNeu();
+  if(p==='lesen')renderLesen();
   if(p==='home'||p==='stats')updateAll();
   closeDrawer();
 }
