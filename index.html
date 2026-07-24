@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   :root{
     --bg:#F7F8FA;--surface:#FFFFFF;--sidebar:#FBFBFC;--side-text:#5C646C;
@@ -209,6 +210,45 @@
   .barchart .b{flex:1;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:6px 6px 0 0;position:relative}
   .barchart .b.hi{background:var(--accent);border-color:var(--accent)}
   .barchart .b span{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--faint)}
+  .drop{border:1.5px dashed var(--accent-line);border-radius:14px;padding:26px 18px;text-align:center;background:var(--surface);cursor:pointer}
+  .drop:active{background:var(--accent-soft)}
+  .drop svg{margin:0 auto 10px;color:var(--accent)}
+  .drop b{display:block;font-size:14.5px;font-weight:600;margin-bottom:4px}
+  .drop span{font-size:12.5px;color:var(--muted)}
+  .wahl{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.wahl{grid-template-columns:1fr}}
+  .ta{width:100%;border:1px solid var(--border);border-radius:11px;padding:12px 14px;font-size:14px;
+    line-height:1.5;min-height:160px;resize:vertical;outline:none;background:#fff;color:var(--text)}
+  .ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .zeile{display:flex;gap:10px;flex-wrap:wrap}
+  .zeile .field{flex:1;min-width:120px;margin-top:0}
+  .infobox{background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:11px;
+    padding:12px 14px;font-size:13px;color:#31414F;margin-top:14px;line-height:1.5}
+  .warnbox{background:#FBF7EE;border:1px solid #EFE1C6;border-radius:11px;padding:12px 14px;
+    font-size:12.5px;color:#6B5A38;margin-top:12px;line-height:1.5}
+  .vk{padding:15px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+  .vk.aus{opacity:.42}
+  .vk .haken{width:21px;height:21px;border-radius:6px;border:1.7px solid var(--accent-line);flex:none;
+    display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .vk.an .haken{background:var(--accent);border-color:var(--accent)}
+  .vk .haken svg{opacity:0;color:#fff}
+  .vk.an .haken svg{opacity:1}
+  .vk .vb{flex:1;min-width:0}
+  .vk .vfn{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .vk .vc{font-size:15px;font-weight:600;margin:4px 0 5px}
+  .vk .vq{font-size:13px;color:#46525C;line-height:1.5}
+  .vk .va{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:6px;padding-top:6px;border-top:1px solid var(--border-2)}
+  .lade{display:flex;align-items:center;gap:12px;padding:18px;font-size:13.5px;color:var(--muted)}
+  .lade .sp{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--accent-line);
+    border-top-color:var(--accent);animation:dreh .8s linear infinite;flex:none}
+  @keyframes dreh{to{transform:rotate(360deg)}}
+  .qzeile{display:flex;align-items:center;gap:13px;padding:14px 16px;margin-bottom:10px}
+  .qzeile .qi{width:34px;height:40px;border-radius:7px;background:var(--accent-soft);color:var(--accent);
+    flex:none;display:flex;align-items:center;justify-content:center}
+  .qzeile .qb{flex:1;min-width:0}
+  .qzeile .qb b{font-size:13.5px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis}
+  .qzeile .qb small{font-size:12px;color:var(--muted)}
+  .qzeile .qx{background:none;border:none;color:var(--faint);font-size:12.5px;font-weight:600;cursor:pointer;padding:6px}
   .note{margin-top:16px;font-size:12px;color:var(--faint);text-align:center;line-height:1.5}
 
   .authbox{padding:22px;max-width:460px}
@@ -290,7 +330,7 @@
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5C2 3.7 2.7 3 3.5 3H8v10H3.5C2.7 13 2 12.3 2 11.5v-7Z" fill="#fff" opacity=".95"/><path d="M14 4.5c0-.8-.7-1.5-1.5-1.5H8v10h4.5c.8 0 1.5-.7 1.5-1.5v-7Z" fill="#fff" opacity=".6"/></svg></div>
-      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 6 · Prof. Jennings</div></div>
+      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 7 · eigene Karten</div></div>
     </div>
     <button class="newgoal" onclick="go('paths')"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>Neues Lernziel</button>
     <div class="navlabel">Lernen</div>
@@ -402,13 +442,13 @@
     <!-- LIBRARY -->
     <div class="panel" id="p-lib">
       <div class="topbar"><div class="crumb">Wissen</div><div class="h1">Bibliothek</div></div>
-      <div class="pagerest">
-        <div class="card simple">
-          <div class="src-item"><div class="sic"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 3h9a1 1 0 0 1 1 1v11l-2.5-1.5L9 15l-2.5-1.5L4 15V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div><div class="sbody"><b>Scherf – Öffentliche Finanzen, Bd. 1</b><small>PDF · 12 Starter-Karten erzeugt</small></div><span class="pill">aktiv</span></div>
-          <div class="src-item"><div class="sic"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 3h9a1 1 0 0 1 1 1v11l-2.5-1.5L9 15l-2.5-1.5L4 15V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div><div class="sbody"><b>Nowotny-Zagler – Einführung öffentl. Finanzwirtschaft</b><small>PDF · für Etappe 3 vorgemerkt</small></div><span class="pill">bereit</span></div>
-        </div>
-        <div class="card path add" style="margin-top:12px"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Quelle hinzufügen<span class="soonbadge" style="margin-left:6px">Etappe 3</span></div>
-      </div>
+      <div class="pagerest"><div id="libArea"></div></div>
+    </div>
+
+    <!-- QUELLE HINZUFÜGEN -->
+    <div class="panel" id="p-neu">
+      <div class="topbar"><div class="crumb">Wissen · Bibliothek</div><div class="h1">Quelle hinzufügen</div></div>
+      <div class="pagerest"><div id="neuArea"></div></div>
     </div>
 
     <!-- STATS -->
@@ -438,7 +478,7 @@ const FUNKTION     = 'Adorno';   // Name deiner Edge Function (Groß-/Kleinschre
 /* ========================================================== */
 
 /* ---------------- Starter-Karten (aus Scherf, Bd. 1) ---------------- */
-const CARDS=[
+const STARTER=[
  {id:'c1',fn:'Musgrave · Staatsfunktion 1',concept:'Das Allokationsziel',core:'Der Staat springt dort ein, wo der Markt <span class="hl">öffentliche Güter</span> nicht ausreichend bereitstellt.',q:'Warum kann der Markt öffentliche Güter nicht angemessen bereitstellen?',a:'Weil sie nichtausschließbar und nichtrival sind: Niemand lässt sich von der Nutzung ausschließen, also entsteht das Trittbrettfahrerproblem – privat werden sie nicht (ausreichend) angeboten.',src:'Scherf S.12'},
  {id:'c2',fn:'Öffentliche Güter',concept:'Zwei Kriterien',core:'Ein <span class="hl">reines</span> öffentliches Gut erfüllt beide Kriterien zugleich.',q:'Nenne die zwei Eigenschaften eines reinen öffentlichen Guts und erkläre sie in eigenen Worten.',a:'Nichtausschließbarkeit (man kann niemanden von der Nutzung ausschließen) und Nichtrivalität (der Nutzen des einen mindert nicht den des anderen). Beispiel: äußere Sicherheit, saubere Luft.',src:'Scherf S.12'},
  {id:'c3',fn:'Marktversagen',concept:'Trittbrettfahrerproblem',core:'Der Anreiz, ohne Beitrag zu nutzen, macht die private Bereitstellung <span class="hl">unmöglich</span>.',q:'Erkläre, warum bei öffentlichen Gütern jeder einen Anreiz zum Trittbrettfahren hat.',a:'Weil niemand ausgeschlossen werden kann, lohnt es sich, das Gut zu nutzen, ohne für die Bereitstellung zu zahlen. Zahlt niemand freiwillig, wird das Gut privat nicht angeboten – der Staat muss über Zwangsabgaben finanzieren.',src:'Scherf S.13'},
@@ -477,8 +517,28 @@ function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):nul
 function saveLocal(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){mem=s;}}
 let S=load()||{};
 S.rev=S.rev||{};S.streak=S.streak||{count:0,last:null};S.total=S.total||0;S.chats=S.chats||{};
+S.karten=S.karten||{};S.quellen=S.quellen||{};S.tomb=S.tomb||{};
 // Altlasten aufräumen: früher wurden Fehlermeldungen im Gespräch mitgespeichert
 Object.values(S.chats).forEach(c=>{if(c&&c.fehler)delete c.fehler;});
+
+/* Einmalige Umstellung: die 12 Starter-Karten wandern aus dem Code
+   in den synchronisierten Speicher. Der Lernfortschritt bleibt erhalten,
+   weil die Kennungen (c1 … c12) unverändert bleiben. */
+if(Object.keys(S.karten).length===0){
+  const jetzt=Date.now();
+  S.quellen['q_scherf']={id:'q_scherf',titel:'Scherf – Öffentliche Finanzen, Bd. 1',typ:'PDF',ts:jetzt};
+  STARTER.forEach(k=>{S.karten[k.id]=Object.assign({},k,{quelle:'q_scherf',ts:jetzt});});
+  saveLocal(S);
+}
+
+function kartenListe(){return Object.values(S.karten||{});}
+function karteById(id){return (S.karten||{})[id];}
+function kartenDerQuelle(qid){return kartenListe().filter(k=>k.quelle===qid);}
+function neueId(pre){return pre+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+/* **Begriff** in der Kernaussage wird zur farbigen Hervorhebung */
+function kernHtml(t){
+  return esc(String(t||'')).replace(/\*\*([^*]+)\*\*/g,'<span class="hl">$1</span>');
+}
 
 const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -518,8 +578,8 @@ function md(text){
 
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function isDue(id){const r=S.rev[id];if(!r)return true;return new Date(r.due)<=new Date();}
-function dueCards(){return CARDS.filter(c=>isDue(c.id));}
-function masteredCount(){return CARDS.filter(c=>{const r=S.rev[c.id];return r&&r.interval>=21;}).length;}
+function dueCards(){return kartenListe().filter(c=>isDue(c.id));}
+function masteredCount(){return kartenListe().filter(c=>{const r=S.rev[c.id];return r&&r.interval>=21;}).length;}
 
 function bumpStreak(){
   const t=todayStr();
@@ -548,7 +608,7 @@ try{
 
 function mergeStates(local,remote){
   if(!remote)return local;
-  const out={rev:{},streak:{count:0,last:null},total:Math.max(local.total||0,remote.total||0),chats:{}};
+  const out={rev:{},streak:{count:0,last:null},total:Math.max(local.total||0,remote.total||0),chats:{},karten:{},quellen:{},tomb:{}};
   const ids=new Set([...Object.keys(local.rev||{}),...Object.keys(remote.rev||{})]);
   ids.forEach(id=>{
     const a=(local.rev||{})[id],b=(remote.rev||{})[id];
@@ -558,6 +618,27 @@ function mergeStates(local,remote){
   ck.forEach(k=>{
     const a=(local.chats||{})[k],b=(remote.chats||{})[k];
     if(a&&b)out.chats[k]=((a.ts||0)>=(b.ts||0))?a:b;else out.chats[k]=a||b;
+  });
+
+  // Karten und Quellen: Vereinigung, bei Dopplung gewinnt die neuere Fassung
+  const vereine=(a,b)=>{
+    const o={},ids=new Set([...Object.keys(a||{}),...Object.keys(b||{})]);
+    ids.forEach(id=>{const x=(a||{})[id],y=(b||{})[id];
+      o[id]=(x&&y)?(((x.ts||0)>=(y.ts||0))?x:y):(x||y);});
+    return o;
+  };
+  out.karten=vereine(local.karten,remote.karten);
+  out.quellen=vereine(local.quellen,remote.quellen);
+
+  // Löschmarken, damit Gelöschtes nicht vom anderen Gerät zurückkehrt
+  out.tomb={};
+  new Set([...Object.keys(local.tomb||{}),...Object.keys(remote.tomb||{})]).forEach(id=>{
+    out.tomb[id]=Math.max((local.tomb||{})[id]||0,(remote.tomb||{})[id]||0);
+  });
+  Object.keys(out.tomb).forEach(id=>{
+    const t=out.tomb[id];
+    if(out.karten[id]&&(out.karten[id].ts||0)<=t)delete out.karten[id];
+    if(out.quellen[id]&&(out.quellen[id].ts||0)<=t)delete out.quellen[id];
   });
   const ls=local.streak||{},rs=remote.streak||{};
   if((ls.last||'')>(rs.last||''))out.streak={count:ls.count||0,last:ls.last||null};
@@ -657,7 +738,7 @@ function themaWaehlen(slug,titel){
   neuerChat(k,titel,'',P().aufhaenger+titel+(partner==='adorno'?' streiten. Fang an – ich halte dagegen.':' verstehen. Erklär es mir und prüf mich danach.'));
 }
 function streitUeber(id,wer){
-  const c=CARDS.find(x=>x.id===id);if(!c)return;
+  const c=karteById(id);if(!c)return;
   partner=wer||'dozent';
   const k=partner+'__karte_'+id;
   const kontext='Karte: '+c.concept+' ('+c.fn+')\nKern: '+c.core.replace(/<[^>]+>/g,'')+'\nHintergrund: '+c.a+'\nQuelle: '+c.src;
@@ -854,11 +935,12 @@ function renderCard(){
       <button class="btn" style="max-width:240px;margin:16px auto 0" onclick="go('spar')">Diskussion öffnen</button></div>`;
     updateAll();return;
   }
-  const c=CARDS.find(x=>x.id===queue[0]);
+  const c=karteById(queue[0]);
+  if(!c){queue.shift();renderCard();return;}
   if(!flipped){
     area.innerHTML=`<div class="card fcard">
       <div class="eyebrow">${c.fn}</div><div class="concept">${c.concept}</div>
-      <div class="core">${c.core}</div>
+      <div class="core">${kernHtml(c.core)}</div>
       <div class="test"><div class="tl">Selbsttest · Verstehen, nicht Auswendig</div><div class="q">${c.q}</div></div>
       <button class="primary" onclick="flip()">Antwort aufdecken</button>
       <div class="meta">📎 ${c.src} · noch ${queue.length} ${queue.length===1?'Karte':'Karten'}</div></div>`;
@@ -886,14 +968,283 @@ function renderCard(){
 function flip(){flipped=true;renderCard();}
 function rate(r){schedule(queue[0],r);queue.shift();flipped=false;renderCard();}
 
+/* ---------------- Bibliothek & Kartenerzeugung ---------------- */
+let neu={schritt:'wahl',pdf:null,dateiname:'',seiten:0,von:1,bis:1,text:'',
+         titel:'',fokus:'',anzahl:8,vorschau:null,busy:'',fehler:null,quelleId:null};
+
+function renderLib(){
+  const el=document.getElementById('libArea');if(!el)return;
+  const qs=Object.values(S.quellen||{}).sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const gesamt=kartenListe().length;
+  el.innerHTML=`
+    <div class="row stat" style="grid-template-columns:1fr 1fr">
+      <div class="stat-c card accent"><div class="k">Karten insgesamt</div><div class="v">${gesamt}</div></div>
+      <div class="stat-c card"><div class="k">Quellen</div><div class="v">${qs.length}</div></div>
+    </div>
+    <div class="sectitle">Deine Quellen</div>
+    ${qs.length?qs.map(q=>`
+      <div class="card qzeile">
+        <div class="qi">${q.typ==='Text'
+          ?'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4 3.5h10M4 7h10M4 10.5h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>'
+          :'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4 3h9a1 1 0 0 1 1 1v11l-2.5-1.5L9 15l-2.5-1.5L4 15V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>'}</div>
+        <div class="qb"><b>${esc(q.titel)}</b><small>${q.typ}${q.seiten?' · S. '+q.seiten:''} · ${kartenDerQuelle(q.id).length} Karten</small></div>
+        <button class="qx" onclick="quelleLoeschen('${q.id}')">entfernen</button>
+      </div>`).join(''):'<div class="card simple" style="text-align:center;color:var(--muted);font-size:13.5px">Noch keine Quelle hinterlegt.</div>'}
+    <div class="card path add" style="margin-top:12px;cursor:pointer" onclick="neuStarten()">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Quelle hinzufügen und Karten erzeugen</div>
+    <p class="note">Aus jeder Quelle lassen sich beliebig oft neue Karten erzeugen.</p>`;
+}
+
+function quelleLoeschen(qid){
+  const q=(S.quellen||{})[qid];if(!q)return;
+  const anz=kartenDerQuelle(qid).length;
+  if(!confirm('„'+q.titel+'" mit '+anz+' Karten entfernen? Der Lernfortschritt dieser Karten geht verloren.'))return;
+  const jetzt=Date.now();
+  kartenDerQuelle(qid).forEach(k=>{delete S.karten[k.id];delete S.rev[k.id];S.tomb[k.id]=jetzt;});
+  delete S.quellen[qid];S.tomb[qid]=jetzt;
+  saveLocal(S);schedulePush();renderLib();updateAll();
+}
+
+function neuStarten(){
+  neu={schritt:'wahl',pdf:null,dateiname:'',seiten:0,von:1,bis:1,text:'',
+       titel:'',fokus:'',anzahl:8,vorschau:null,busy:'',fehler:null,quelleId:null};
+  go('neu');
+}
+function neuZu(schritt){neu.schritt=schritt;neu.fehler=null;renderNeu();}
+function neuFeld(feld,wert){neu[feld]=wert;}
+
+async function pdfGewaehlt(input){
+  const f=input.files&&input.files[0];if(!f)return;
+  neu.fehler=null;neu.busy='PDF wird geöffnet …';renderNeu();
+  try{
+    if(!window.pdfjsLib)throw new Error('PDF-Werkzeug nicht geladen. Seite neu laden.');
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const buf=await f.arrayBuffer();
+    neu.pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    neu.seiten=neu.pdf.numPages;
+    neu.dateiname=f.name;
+    neu.titel=f.name.replace(/\.pdf$/i,'').replace(/[_-]+/g,' ').slice(0,80);
+    neu.von=1;neu.bis=Math.min(12,neu.seiten);
+    neu.busy='';neu.schritt='pdf';
+  }catch(e){neu.busy='';neu.fehler='PDF ließ sich nicht öffnen: '+(e.message||e);}
+  renderNeu();
+}
+
+async function seitenAuslesen(){
+  const von=Math.max(1,Math.min(neu.seiten,parseInt(document.getElementById('vonS').value)||1));
+  const bis=Math.max(von,Math.min(neu.seiten,parseInt(document.getElementById('bisS').value)||von));
+  if(bis-von>39){neu.fehler='Bitte höchstens 40 Seiten auf einmal – sonst wird der Auszug zu groß.';renderNeu();return;}
+  neu.von=von;neu.bis=bis;neu.fehler=null;
+  neu.busy='Seite '+von+' von '+bis+' …';renderNeu();
+  try{
+    let t='';
+    for(let n=von;n<=bis;n++){
+      neu.busy='Seite '+n+' von '+bis+' wird gelesen …';renderNeu();
+      const seite=await neu.pdf.getPage(n);
+      const inhalt=await seite.getTextContent();
+      t+=inhalt.items.map(i=>i.str).join(' ')+'\n\n';
+    }
+    neu.text=t.replace(/[ \t]+/g,' ').trim();
+    neu.busy='';
+    if(neu.text.length<200){neu.fehler='In diesem Bereich wurde kaum Text gefunden. Womöglich sind das eingescannte Bildseiten – dann hilft nur ein anderer Bereich.';}
+    else neu.schritt='bereit';
+  }catch(e){neu.busy='';neu.fehler='Auslesen fehlgeschlagen: '+(e.message||e);}
+  renderNeu();
+}
+
+function textUebernehmen(){
+  const t=document.getElementById('freiText').value.trim();
+  const ti=document.getElementById('freiTitel').value.trim();
+  if(t.length<200){neu.fehler='Bitte mindestens ein paar Absätze einfügen.';renderNeu();return;}
+  neu.text=t;neu.titel=ti||'Eigener Text';neu.seiten=0;neu.schritt='bereit';neu.fehler=null;renderNeu();
+}
+
+async function kartenErzeugen(){
+  const fokusEl=document.getElementById('fokusF');
+  const anzEl=document.getElementById('anzahlF');
+  const titelEl=document.getElementById('titelF');
+  if(fokusEl)neu.fokus=fokusEl.value.trim();
+  if(anzEl)neu.anzahl=Math.max(3,Math.min(20,parseInt(anzEl.value)||8));
+  if(titelEl&&titelEl.value.trim())neu.titel=titelEl.value.trim();
+  neu.fehler=null;neu.busy='Karten werden erzeugt – das dauert einen Moment …';renderNeu();
+  try{
+    if(!user)throw new Error('Bitte zuerst unter „Konto & Sync" anmelden.');
+    const {data:sess}=await sb.auth.getSession();
+    const token=sess&&sess.session?sess.session.access_token:null;
+    if(!token)throw new Error('Keine gültige Sitzung.');
+    const url=SUPABASE_URL.replace(/\/+$/,'')+'/functions/v1/'+FUNKTION;
+    const r=await fetch(url,{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({rolle:'karten',text:neu.text,quelle:neu.titel,fokus:neu.fokus,anzahl:neu.anzahl})});
+    const roh=await r.text();
+    let d=null;try{d=JSON.parse(roh);}catch(_){}
+    if(!r.ok)throw new Error('HTTP '+r.status+' — '+((d&&d.fehler)||roh.slice(0,250)));
+    if(d&&d.fehler)throw new Error(d.fehler);
+    let txt=(d&&d.text)||'';
+    txt=txt.replace(/^\s*```(?:json)?/i,'').replace(/```\s*$/,'').trim();
+    const ab=txt.indexOf('['),zu=txt.lastIndexOf(']');
+    if(ab<0||zu<0)throw new Error('Unerwartete Antwort – kein Kartensatz erkennbar.');
+    const liste=JSON.parse(txt.slice(ab,zu+1));
+    if(!Array.isArray(liste)||!liste.length)throw new Error('Es kamen keine Karten zurück.');
+    neu.vorschau=liste.filter(k=>k&&k.concept&&k.q).map(k=>({
+      fn:String(k.fn||neu.titel).slice(0,60),
+      concept:String(k.concept||'').slice(0,90),
+      core:String(k.core||'').slice(0,400),
+      q:String(k.q||'').slice(0,400),
+      a:String(k.a||'').slice(0,900),
+      an:true
+    }));
+    neu.busy='';neu.schritt='vorschau';
+  }catch(e){neu.busy='';neu.fehler=e.message||String(e);}
+  renderNeu();
+}
+
+function vorschauUm(i){
+  if(!neu.vorschau||!neu.vorschau[i])return;
+  neu.vorschau[i].an=!neu.vorschau[i].an;renderNeu();
+}
+function vorschauAlle(an){
+  (neu.vorschau||[]).forEach(k=>k.an=an);renderNeu();
+}
+function kartenUebernehmen(){
+  const gewaehlt=(neu.vorschau||[]).filter(k=>k.an);
+  if(!gewaehlt.length){neu.fehler='Keine Karte ausgewählt.';renderNeu();return;}
+  const jetzt=Date.now();
+  let qid=neu.quelleId;
+  if(!qid){
+    qid=neueId('q');
+    S.quellen[qid]={id:qid,titel:neu.titel||'Ohne Titel',typ:neu.seiten?'PDF':'Text',
+                    seiten:neu.seiten?(neu.von+'–'+neu.bis):'',ts:jetzt};
+    neu.quelleId=qid;
+  }
+  gewaehlt.forEach(k=>{
+    const id=neueId('k');
+    S.karten[id]={id,fn:k.fn,concept:k.concept,core:k.core,q:k.q,a:k.a,
+                  src:(S.quellen[qid].titel+(neu.seiten?' S.'+neu.von+'–'+neu.bis:'')).slice(0,90),
+                  quelle:qid,ts:jetzt};
+  });
+  saveLocal(S);schedulePush();
+  neu.schritt='fertig';neu.uebernommen=gewaehlt.length;renderNeu();
+  updateAll();
+}
+
+function renderNeu(){
+  const el=document.getElementById('neuArea');if(!el)return;
+  const f=neu.fehler?`<div class="msgline show err">${esc(neu.fehler)}</div>`:'';
+  if(neu.busy){
+    el.innerHTML=`<div class="card lade"><span class="sp"></span><span>${esc(neu.busy)}</span></div>${f}`;
+    return;
+  }
+
+  if(neu.schritt==='wahl'){
+    el.innerHTML=`
+      <div class="wahl">
+        <label class="drop">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <b>PDF hochladen</b><span>Buch, Aufsatz, Gesetzestext</span>
+          <input type="file" accept="application/pdf" style="display:none" onchange="pdfGewaehlt(this)">
+        </label>
+        <div class="drop" onclick="neuZu('text')">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 5h14M5 10h14M5 15h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <b>Text einfügen</b><span>Auszug, Webseite, Notizen</span>
+        </div>
+      </div>
+      <div class="infobox">Aus dem gewählten Material erzeugt der Begleiter Karten, die auf <b>Verständnis</b> zielen – keine Definitionsabfragen. Du siehst alles in der Vorschau und entscheidest, was übernommen wird.</div>
+      <button class="btn ghost" style="max-width:200px" onclick="go('lib')">Zurück</button>${f}`;
+    return;
+  }
+
+  if(neu.schritt==='text'){
+    el.innerHTML=`
+      <div class="card simple">
+        <div class="field" style="margin-top:0"><label>Woher stammt der Text?</label>
+          <input id="freiTitel" type="text" placeholder="z. B. VwVfG § 35 – Kommentar" value="${esc(neu.titel)}"></div>
+        <div class="field"><label>Text einfügen</label>
+          <textarea id="freiText" class="ta" placeholder="Hier den Auszug einfügen …">${esc(neu.text)}</textarea></div>
+        <button class="btn" onclick="textUebernehmen()">Weiter</button>
+        <button class="btn ghost" onclick="neuZu('wahl')">Zurück</button>
+      </div>${f}`;
+    return;
+  }
+
+  if(neu.schritt==='pdf'){
+    el.innerHTML=`
+      <div class="card simple">
+        <div style="font-size:14px;font-weight:600;margin-bottom:3px">${esc(neu.dateiname)}</div>
+        <div style="font-size:12.5px;color:var(--muted)">${neu.seiten} Seiten erkannt</div>
+        <div class="zeile" style="margin-top:16px">
+          <div class="field"><label>Von Seite</label><input id="vonS" type="number" min="1" max="${neu.seiten}" value="${neu.von}"></div>
+          <div class="field"><label>Bis Seite</label><input id="bisS" type="number" min="1" max="${neu.seiten}" value="${neu.bis}"></div>
+        </div>
+        <div class="warnbox">Nimm einen <b>zusammenhängenden Abschnitt</b> – ein Kapitel oder Unterkapitel. Höchstens 40 Seiten auf einmal. Kleinere Häppchen ergeben schärfere Karten als ein ganzes Buch.</div>
+        <button class="btn" onclick="seitenAuslesen()">Text auslesen</button>
+        <button class="btn ghost" onclick="neuZu('wahl')">Andere Quelle</button>
+      </div>${f}`;
+    return;
+  }
+
+  if(neu.schritt==='bereit'){
+    const zeichen=neu.text.length;
+    el.innerHTML=`
+      <div class="card simple">
+        <div style="font-size:14px;font-weight:600;margin-bottom:3px">Text steht bereit</div>
+        <div style="font-size:12.5px;color:var(--muted)">${zeichen.toLocaleString('de-DE')} Zeichen${neu.seiten?' aus S. '+neu.von+'–'+neu.bis:''}</div>
+        <div class="field"><label>Titel der Quelle</label>
+          <input id="titelF" type="text" value="${esc(neu.titel)}"></div>
+        <div class="field"><label>Schwerpunkt (freiwillig)</label>
+          <input id="fokusF" type="text" placeholder="z. B. nur die Rechtsfolgen, nicht die Historie" value="${esc(neu.fokus)}"></div>
+        <div class="field"><label>Wie viele Karten?</label>
+          <input id="anzahlF" type="number" min="3" max="20" value="${neu.anzahl}"></div>
+        <button class="btn" onclick="kartenErzeugen()">Karten erzeugen</button>
+        <button class="btn ghost" onclick="neuZu('${neu.seiten?'pdf':'text'}')">Zurück</button>
+      </div>${f}`;
+    return;
+  }
+
+  if(neu.schritt==='vorschau'){
+    const an=(neu.vorschau||[]).filter(k=>k.an).length;
+    el.innerHTML=`
+      <div class="sectitle" style="margin-top:0"><span>${neu.vorschau.length} Karten vorgeschlagen · ${an} ausgewählt</span>
+        <a onclick="vorschauAlle(${an===neu.vorschau.length?'false':'true'})">${an===neu.vorschau.length?'keine':'alle'}</a></div>
+      ${neu.vorschau.map((k,i)=>`
+        <div class="card vk ${k.an?'an':'aus'}" onclick="vorschauUm(${i})">
+          <span class="haken"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5 5 9l5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div class="vb">
+            <div class="vfn">${esc(k.fn)}</div>
+            <div class="vc">${esc(k.concept)}</div>
+            <div class="vq">${kernHtml(k.core)}</div>
+            <div class="va"><b>Frage:</b> ${esc(k.q)}</div>
+          </div>
+        </div>`).join('')}
+      <button class="btn" onclick="kartenUebernehmen()">${an} Karten übernehmen</button>
+      <button class="btn ghost" onclick="kartenErzeugen()">Neu erzeugen</button>
+      <button class="btn ghost" onclick="neuZu('bereit')">Zurück</button>${f}`;
+    return;
+  }
+
+  if(neu.schritt==='fertig'){
+    el.innerHTML=`
+      <div class="empty"><svg class="mascot lg"><use href="#dozentin"/></svg>
+        <h3>${neu.uebernommen} Karten übernommen</h3>
+        <p>Sie sind ab sofort in deiner Wiederholung – und auf dem iPad ebenso, sobald abgeglichen wurde.</p>
+        <button class="btn" style="max-width:240px;margin:16px auto 0" onclick="go('cards')">Gleich lernen</button>
+        <button class="btn ghost" style="max-width:240px;margin:9px auto 0" onclick="neuZu('bereit')">Weitere aus diesem Text</button>
+        <button class="btn ghost" style="max-width:240px;margin:9px auto 0" onclick="go('lib')">Zur Bibliothek</button>
+      </div>`;
+    return;
+  }
+}
+
 /* ---------------- Dashboard ---------------- */
 function updateAll(){
   const due=dueCards().length,mast=masteredCount();
-  const seen=CARDS.filter(c=>S.rev[c.id]).length;
+  const alle=kartenListe();
+  const seen=alle.filter(c=>S.rev[c.id]).length;
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   set('dueBadge',due);set('dueVal',due);set('streakVal',S.streak.count);set('masterVal',mast);
   set('continueSub',due?`${due} ${due===1?'Karte':'Karten'} fällig`:'Alles wiederholt – top');
-  const pct=Math.round(seen/CARDS.length*100);
+  const pct=alle.length?Math.round(seen/alle.length*100):0;
   const hp=document.getElementById('homeProg');if(hp)hp.style.width=pct+'%';
   const pp=document.getElementById('pathProg');if(pp)pp.style.width=pct+'%';
   set('pathPct',pct+'%');
@@ -901,7 +1252,7 @@ function updateAll(){
   set('s-master',mast);set('s-total',S.total);
   const ss=document.getElementById('s-streak');if(ss)ss.innerHTML=S.streak.count+' <small>Tage</small>';
   const buckets={'neu':0,'1-3T':0,'1Wo':0,'2Wo+':0,'reif':0};
-  CARDS.forEach(c=>{const r=S.rev[c.id];if(!r)buckets['neu']++;else if(r.interval<3)buckets['1-3T']++;else if(r.interval<7)buckets['1Wo']++;else if(r.interval<21)buckets['2Wo+']++;else buckets['reif']++;});
+  alle.forEach(c=>{const r=S.rev[c.id];if(!r)buckets['neu']++;else if(r.interval<3)buckets['1-3T']++;else if(r.interval<7)buckets['1Wo']++;else if(r.interval<21)buckets['2Wo+']++;else buckets['reif']++;});
   const max=Math.max(1,...Object.values(buckets));
   const ch=document.getElementById('chart');
   if(ch)ch.innerHTML=Object.entries(buckets).map(([k,v])=>
@@ -913,7 +1264,7 @@ function updateAll(){
 }
 
 /* ---------------- Navigation ---------------- */
-const titles={home:'Heute',cards:'Karteikarten',paths:'Lernpfade',spar:'Gespräch',pod:'Audio',lib:'Bibliothek',stats:'Fortschritt',acct:'Konto & Sync'};
+const titles={home:'Heute',cards:'Karteikarten',paths:'Lernpfade',spar:'Gespräch',pod:'Audio',lib:'Bibliothek',neu:'Quelle hinzufügen',stats:'Fortschritt',acct:'Konto & Sync'};
 function go(p,el,wer){
   if(p==='spar'&&wer&&wer!==partner){partner=wer;chatKey=null;letzterFehler=null;}
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
@@ -928,6 +1279,8 @@ function go(p,el,wer){
   if(p==='cards')startReview();
   if(p==='spar')renderSpar();
   if(p==='acct')renderAcct();
+  if(p==='lib')renderLib();
+  if(p==='neu')renderNeu();
   if(p==='home'||p==='stats'||p==='paths')updateAll();
   closeDrawer();
 }
@@ -936,7 +1289,7 @@ function closeDrawer(){document.getElementById('side').classList.remove('open');
 
 /* ---------------- Start ---------------- */
 document.getElementById('todayDate').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
-updateAll();renderAcct();renderSpar();
+updateAll();renderAcct();renderSpar();renderLib();
 
 (async function init(){
   if(!sb)return;
