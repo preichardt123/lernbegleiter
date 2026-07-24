@@ -295,6 +295,14 @@
     background:var(--accent-soft);color:var(--accent-deep);font-size:11px;font-weight:700;margin-right:8px}
   .ettitel{font-size:14px;font-weight:600}
   .etwarum{font-size:12.5px;color:var(--muted);margin:4px 0 8px;line-height:1.5}
+  .lernziel{display:flex;gap:8px;align-items:flex-start;margin:7px 0 5px;padding:8px 11px;
+    background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:9px;
+    font-size:12.5px;line-height:1.5;color:var(--accent-deep);font-weight:500}
+  .lernziel svg{flex:none;margin-top:2px}
+  .gesamtziel{display:flex;gap:9px;align-items:flex-start;margin-top:12px;padding:12px 14px;
+    background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:11px;
+    font-size:13.5px;line-height:1.55;color:var(--accent-deep)}
+  .gesamtziel svg{flex:none;margin-top:2px}
   .etkarte{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:13px}
   .etkarte .ek{width:7px;height:7px;border-radius:2px;flex:none;background:var(--border)}
   .etkarte .ek.fest{background:var(--ok)}
@@ -350,6 +358,17 @@
   .qliste .trenn{height:1px;background:var(--border-2)}
   .lesetext{white-space:pre-wrap;font-size:14px;line-height:1.7;color:#333B43;
     padding:18px;max-height:none;word-wrap:break-word}
+  .stapel .chev{color:var(--faint);transition:transform .2s;flex:none}
+  .stapel.auf .chev{transform:rotate(180deg)}
+  .unterstapel{margin:-4px 0 12px;padding:4px 0 0 14px;border-left:2px solid var(--accent-line);margin-left:20px}
+  .ustapel{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;cursor:pointer;
+    background:var(--surface);border:1px solid var(--border);margin-bottom:7px}
+  .ustapel:active{background:var(--accent-soft)}
+  .ustapel .ub{flex:1;min-width:0}
+  .ustapel .ub b{font-size:13.5px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ustapel .ub small{font-size:11.5px;color:var(--muted)}
+  .ustapel .up{flex:none;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--accent);color:#fff}
+  .ustapel .up.leer{background:#F2F4F6;color:var(--faint)}
   .note{margin-top:16px;font-size:12px;color:var(--faint);text-align:center;line-height:1.5}
 
   .authbox{padding:22px;max-width:460px}
@@ -431,7 +450,7 @@
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5C2 3.7 2.7 3 3.5 3H8v10H3.5C2.7 13 2 12.3 2 11.5v-7Z" fill="#fff" opacity=".95"/><path d="M14 4.5c0-.8-.7-1.5-1.5-1.5H8v10h4.5c.8 0 1.5-.7 1.5-1.5v-7Z" fill="#fff" opacity=".6"/></svg></div>
-      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 13 · Stapel & Bibliothek</div></div>
+      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 15 · Lernziele</div></div>
     </div>
     <button class="newgoal" onclick="go('paths')"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>Neues Lernziel</button>
     <div class="navlabel">Lernen</div>
@@ -880,11 +899,12 @@ async function frageAdorno(verlauf,kontext,rolle){
     throw new Error('HTTP '+r.status+' — '+detail);
   }
   if(daten&&daten.fehler)throw new Error(daten.fehler);
+  letzteAbgeschnitten=!!(daten&&daten.abgeschnitten);
   return (daten&&daten.text)||'(keine Antwort)';
 }
 
 /* ---------------- Sparring-UI ---------------- */
-let chatKey=null,denkt=false,letzterFehler=null,pinOffen=false;
+let chatKey=null,denkt=false,letzterFehler=null,pinOffen=false,letzteAbgeschnitten=false;
 let partner='dozent';
 
 const PARTNER={
@@ -945,14 +965,16 @@ async function sendeNachricht(text){
   c.msgs.push({role:'user',content:t});c.ts=Date.now();
   saveLocal(S);denkt=true;renderSpar();
   try{
+    letzteAbgeschnitten=false;
     const antwort=await frageAdorno(c.msgs.slice(-20),c.kontext,P().rolle);
-    c.msgs.push({role:'assistant',content:antwort});c.ts=Date.now();
+    c.msgs.push({role:'assistant',content:antwort,gekuerzt:letzteAbgeschnitten});c.ts=Date.now();
     letzterFehler=null;
   }catch(e){
     letzterFehler=e.message||String(e);
   }
   denkt=false;saveLocal(S);schedulePush();renderSpar();
 }
+function weiterschreiben(){sendeNachricht('Bitte führ deinen letzten Gedanken zu Ende – dort ist die Antwort abgebrochen.');}
 function sendeAusFeld(){
   const ta=document.getElementById('chatInput');if(!ta)return;
   const v=ta.value;ta.value='';ta.style.height='auto';sendeNachricht(v);
@@ -1007,7 +1029,11 @@ function renderSpar(){
   const c=S.chats[chatKey];
   const bubbles=(c.msgs||[]).map(m=>m.role==='user'
     ? `<div class="msg me"><div class="mtext">${esc(m.content)}</div></div>`
-    : `<div class="msg coach-msg"><svg class="mav"><use href="${p.avatar}"/></svg><div class="mtext">${md(m.content)}</div></div>`
+    : `<div class="msg coach-msg"><svg class="mav"><use href="${p.avatar}"/></svg><div class="mtext">${md(m.content)}${
+        m.gekuerzt?`<div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--border-2);font-size:12px;color:var(--warn)">
+          Die Antwort endete am Textlimit.
+          <a style="color:var(--accent);font-weight:600;cursor:pointer" onclick="weiterschreiben()">Fortsetzen lassen</a></div>`:''
+      }</div></div>`
   ).join('');
   const fehler=letzterFehler?`<div class="msg err"><div class="mtext">Da ging etwas schief: ${esc(letzterFehler)}</div></div>`:'';
   const denken=denkt?`<div class="thinking"><svg class="mav" style="width:34px;height:34px"><use href="${p.avatar}"/></svg>
@@ -1157,13 +1183,22 @@ function sessionIds(typ,key){
     const basis=offen.length?offen:folge.slice();
     return basis.sort((a,b)=>rangVon(a)-rangVon(b)||folge.indexOf(a)-folge.indexOf(b));
   }
-  if(typ==='stapel'){
-    const ids=kartenListe().filter(k=>(k.fn||'Ohne Einordnung')===key).map(k=>k.id);
+  if(typ==='thema'){
+    const [qid,fn]=String(key).split('::');
+    const ids=kartenListe().filter(k=>{
+      const kq=(S.quellen[k.quelle]?k.quelle:'_ohne');
+      return kq===qid&&(k.fn||'Ohne Einordnung')===fn;
+    }).map(k=>k.id);
     const offen=ids.filter(id=>rangVon(id)<3);
     return (offen.length?offen:ids).sort((a,b)=>rangVon(a)-rangVon(b));
   }
   if(typ==='quelle'){
-    const ids=kartenDerQuelle(key).map(k=>k.id);
+    const ids=kartenListe().filter(k=>(S.quellen[k.quelle]?k.quelle:'_ohne')===key).map(k=>k.id);
+    const offen=ids.filter(id=>rangVon(id)<3);
+    return (offen.length?offen:ids).sort((a,b)=>rangVon(a)-rangVon(b));
+  }
+  if(typ==='stapel'){
+    const ids=kartenListe().filter(k=>(k.fn||'Ohne Einordnung')===key).map(k=>k.id);
     const offen=ids.filter(id=>rangVon(id)<3);
     return (offen.length?offen:ids).sort((a,b)=>rangVon(a)-rangVon(b));
   }
@@ -1186,6 +1221,9 @@ function starteEinheit(typ,key,titel){
 }
 function einheitBeenden(){sess=null;queue=[];flipped=false;renderCards();}
 function startReview(){ if(!sess)renderCards(); else renderCard(); }
+let stapelOffen=null;
+function stapelUm(id){stapelOffen=(stapelOffen===id)?null:id;renderCards();}
+
 function renderCards(){
   const area=document.getElementById('cardArea');if(!area)return;
   if(sess){renderCard();return;}
@@ -1194,18 +1232,29 @@ function renderCards(){
   const due=dueCards().length;
   const pf=fokusPfad();
 
-  // Nach Einordnung stapeln
-  const gruppen={};
+  // Erste Ebene: Quellen. Zweite Ebene: Themen innerhalb der Quelle.
+  const nachQuelle={};
   alle.forEach(k=>{
-    const g=k.fn||'Ohne Einordnung';
-    (gruppen[g]=gruppen[g]||[]).push(k);
+    const qid=(S.quellen[k.quelle]?k.quelle:'_ohne');
+    (nachQuelle[qid]=nachQuelle[qid]||[]).push(k);
   });
-  const stapel=Object.entries(gruppen).map(([g,ks])=>{
-    const faellig=ks.filter(k=>isDue(k.id)).length;
-    const fest=ks.filter(k=>{const r=S.rev[k.id];return r&&r.interval>=7;}).length;
-    const quelle=((S.quellen[ks[0].quelle]||{}).titel)||'';
-    return {g,anz:ks.length,faellig,fest,quelle,pct:Math.round(fest/ks.length*100)};
-  }).sort((a,b)=>b.faellig-a.faellig||a.g.localeCompare(b.g));
+  const zahlen=ks=>({
+    anz:ks.length,
+    faellig:ks.filter(k=>isDue(k.id)).length,
+    fest:ks.filter(k=>{const r=S.rev[k.id];return r&&r.interval>=7;}).length
+  });
+  const quellen=Object.entries(nachQuelle).map(([qid,ks])=>{
+    const q=S.quellen[qid];
+    const z=zahlen(ks);
+    const themen={};
+    ks.forEach(k=>{const t=k.fn||'Ohne Einordnung';(themen[t]=themen[t]||[]).push(k);});
+    return {qid,titel:q?q.titel:'Ohne Quelle',typ:q?q.typ:'',unbelegt:q&&q.unbelegt,
+      ...z,pct:Math.round(z.fest/ks.length*100),
+      themen:Object.entries(themen).map(([t,tk])=>({t,...zahlen(tk)}))
+              .sort((a,b)=>b.faellig-a.faellig||a.t.localeCompare(b.t))};
+  }).sort((a,b)=>b.faellig-a.faellig||b.anz-a.anz);
+
+  const esq=t=>esc(t).replace(/'/g,"\\'");
 
   area.innerHTML=`
     <div class="card stapel gross" onclick="starteEinheit('faellig',null,'Alles Fällige')">
@@ -1214,23 +1263,33 @@ function renderCards(){
       <div class="sz"><span class="pill2 ${due?'':'leer'}">${due}</span></div>
     </div>
 
-    ${pf?`<div class="card stapel" onclick="starteEinheit('pfad','${pf.id}','${esc(pf.titel).replace(/'/g,"\\'")}')">
+    ${pf?(()=>{const st=pfadStat(pf);return `<div class="card stapel" onclick="starteEinheit('pfad','${pf.id}','${esq(pf.titel)}')">
       <div class="si"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 4h11M5 10h11M5 16h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2.5" cy="4" r="1.3" fill="currentColor"/><circle cx="2.5" cy="10" r="1.3" fill="currentColor"/><circle cx="2.5" cy="16" r="1.3" fill="currentColor"/></svg></div>
-      <div class="sb"><h4>${esc(pf.titel)}</h4><div class="sm">Dein Fokus-Lernpfad</div>
-        <div class="prog"><i style="width:${pfadStat(pf).pct}%"></i></div></div>
-      <div class="sz"><span class="pill2 ${pfadStat(pf).faellig?'':'leer'}">${pfadStat(pf).faellig}</span></div>
-    </div>`:''}
+      <div class="sb"><h4>${esc(pf.titel)}</h4><div class="sm">Dein Fokus-Lernpfad · ${st.fest}/${st.gesamt} sitzen</div>
+        <div class="prog"><i style="width:${st.pct}%"></i></div></div>
+      <div class="sz"><span class="pill2 ${st.faellig?'':'leer'}">${st.faellig}</span></div>
+    </div>`;})():''}
 
-    <div class="sectitle">Nach Thema${alle.length?' · '+alle.length+' Karten':''}</div>
-    ${stapel.length?stapel.map(t=>`
-      <div class="card stapel" onclick="starteEinheit('stapel','${esc(t.g).replace(/'/g,"\\'")}','${esc(t.g).replace(/'/g,"\\'")}')">
-        <div class="si"><svg width="19" height="19" viewBox="0 0 19 19" fill="none"><rect x="2.5" y="5" width="14" height="10" rx="1.6" stroke="currentColor" stroke-width="1.4"/><path d="M5 2.8h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
-        <div class="sb"><h4>${esc(t.g)}</h4>
-          <div class="sm">${t.anz} Karten · ${t.fest} sitzen${t.quelle?' · '+esc(kuerze(t.quelle,34)):''}</div>
-          <div class="prog"><i style="width:${t.pct}%"></i></div></div>
-        <div class="sz"><span class="pill2 ${t.faellig?'':'leer'}">${t.faellig}</span></div>
-      </div>`).join(''):'<p class="note">Noch keine Karten. Leg in der Bibliothek eine Quelle an.</p>'}
-    <p class="note">Die Zahl rechts zeigt, wie viele Karten des Stapels heute fällig sind.</p>`;
+    <div class="sectitle">Nach Quelle${alle.length?' · '+alle.length+' Karten':''}</div>
+    ${quellen.length?quellen.map(q=>{
+      const offen=stapelOffen===q.qid;
+      return `
+      <div class="card stapel ${offen?'auf':''}" onclick="stapelUm('${q.qid}')">
+        <div class="si"><svg width="19" height="19" viewBox="0 0 18 18" fill="none"><path d="M4 3h9a1 1 0 0 1 1 1v11l-2.5-1.5L9 15l-2.5-1.5L4 15V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+        <div class="sb"><h4>${esc(q.titel)}</h4>
+          <div class="sm">${q.anz} Karten · ${q.fest} sitzen · ${q.themen.length} ${q.themen.length===1?'Thema':'Themen'}${q.unbelegt?' · ungeprüft':''}</div>
+          <div class="prog"><i style="width:${q.pct}%"></i></div></div>
+        <div class="sz"><span class="pill2 ${q.faellig?'':'leer'}">${q.faellig}</span></div>
+        <svg class="chev" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 5.5 7 9l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      ${offen?`<div class="unterstapel">
+        ${q.themen.map(t=>`<div class="ustapel" onclick="event.stopPropagation();starteEinheit('thema','${q.qid}::${esq(t.t)}','${esq(t.t)}')">
+          <div class="ub"><b>${esc(t.t)}</b><small>${t.anz} Karten · ${t.fest} sitzen</small></div>
+          <span class="up ${t.faellig?'':'leer'}">${t.faellig}</span></div>`).join('')}
+        <button class="btn ghost" style="margin-top:2px" onclick="event.stopPropagation();starteEinheit('quelle','${q.qid}','${esq(q.titel)}')">Ganze Quelle lernen</button>
+      </div>`:''}`;
+    }).join(''):'<p class="note">Noch keine Karten. Leg in der Bibliothek eine Quelle an.</p>'}
+    <p class="note">Tipp auf eine Quelle klappt ihre Themen auf. Die Zahl rechts zeigt die heute fälligen Karten.</p>`;
 }
 
 function renderCard(){
@@ -1353,10 +1412,12 @@ async function pfadBauen(){
     const roh2=JSON.parse(txt.slice(ab,zu+1));
     const etappen=(roh2.etappen||[]).map(e=>({
       titel:kuerze(e.titel,90),warum:kuerze(e.warum,240),
+      lernziel:kuerze(e.lernziel,200),
       karten:(e.karten||[]).filter(id=>S.karten[id])
     })).filter(e=>e.karten.length);
     if(!etappen.length)throw new Error('Zu diesem Ziel ließ sich aus deinen Karten kein Pfad bilden. Formulier es anders oder leg passendes Material an.');
     pfadVorschau={titel:kuerze(roh2.titel||zielText,80),beschreibung:kuerze(roh2.beschreibung,260),
+                  gesamtziel:kuerze(roh2.gesamtziel,220),
                   ziel:zielText,deadline:zielFrist||'',etappen,
                   luecken:(roh2.luecken||[]).slice(0,6).map(l=>kuerze(l,90))};
     pfadBusy='';
@@ -1411,6 +1472,7 @@ function etappenHtml(pf,st){
   return (pf.etappen||[]).map((e,i)=>`
     <div class="etappe">
       <div><span class="etnum">${i+1}</span><span class="ettitel">${esc(e.titel)}</span></div>
+      ${e.lernziel?`<div class="lernziel"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/></svg><span>${esc(e.lernziel)}</span></div>`:''}
       ${e.warum?`<div class="etwarum">${esc(e.warum)}</div>`:''}
       ${(e.karten||[]).map(id=>{const k=S.karten[id];if(!k)return '';
         const r=S.rev[id];const fest=r&&r.interval>=7;const fa=isDue(id);
@@ -1438,6 +1500,7 @@ function renderPaths(){
           <div class="pm">${st.gesamt} Karten in ${pfadVorschau.etappen.length} Etappen${pfadVorschau.deadline?' · bis '+new Date(pfadVorschau.deadline).toLocaleDateString('de-DE'):''}</div>
         </div></div>
         <p style="font-size:13.5px;color:#46525C;line-height:1.55;margin-top:10px">${esc(pfadVorschau.beschreibung)}</p>
+        ${pfadVorschau.gesamtziel?`<div class="gesamtziel"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 10 6l4.5.6-3.3 3.2.8 4.5L8 12.2 4 14.3l.8-4.5L1.5 6.6 6 6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span><b>Ziel:</b> ${esc(pfadVorschau.gesamtziel)}</span></div>`:''}
         <div style="margin-top:8px">${etappenHtml(pfadVorschau,st)}</div>
         ${pfadVorschau.luecken.length?`<div class="luecke"><b>Dazu fehlt dir noch Material:</b><br>${pfadVorschau.luecken.map(l=>esc(l)).join(' · ')}</div>`:''}
       </div>
@@ -1465,6 +1528,7 @@ function renderPaths(){
           ${st.tage<0?'Frist verstrichen':(st.tage===0?'heute fällig':'noch '+st.tage+' Tag'+(st.tage===1?'':'e'))}
           ${st.pensum!==null&&st.tage>0?' · '+st.pensum+' Karten/Tag':''}</span></div>`:''}
         <p style="font-size:13.5px;color:#46525C;line-height:1.55;margin-top:12px">${esc(pf.beschreibung||'')}</p>
+        ${pf.gesamtziel?`<div class="gesamtziel"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 10 6l4.5.6-3.3 3.2.8 4.5L8 12.2 4 14.3l.8-4.5L1.5 6.6 6 6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span><b>Ziel:</b> ${esc(pf.gesamtziel)}</span></div>`:''}
         <div style="margin-top:6px">${etappenHtml(pf,st)}</div>
         ${(pf.luecken||[]).length?`<div class="luecke"><b>Dazu fehlt dir noch Material:</b>
           <div style="display:flex;flex-direction:column;gap:7px;margin-top:9px">
@@ -1961,6 +2025,10 @@ function messeLeiste(){
   document.documentElement.style.setProperty('--mbh',h+'px');
 }
 window.addEventListener('resize',messeLeiste);
+// Aufgeklappte Menüs schließen, sobald man daneben tippt
+document.addEventListener('click',function(e){
+  if(libMenu&&!(e.target.closest&&e.target.closest('.qmenu'))){libMenu=null;renderLib();}
+},true);
 
 function openDrawer(){document.getElementById('side').classList.add('open');document.getElementById('scrim').classList.add('show');}
 function closeDrawer(){document.getElementById('side').classList.remove('open');document.getElementById('scrim').classList.remove('show');}
