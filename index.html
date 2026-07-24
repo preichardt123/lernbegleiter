@@ -18,6 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   :root{
     --bg:#F7F8FA;--surface:#FFFFFF;--sidebar:#FBFBFC;--side-text:#5C646C;
@@ -369,6 +370,28 @@
   .ustapel .ub small{font-size:11.5px;color:var(--muted)}
   .ustapel .up{flex:none;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--accent);color:#fff}
   .ustapel .up.leer{background:#F2F4F6;color:var(--faint)}
+  .netz{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:block}
+  .netz line{stroke:var(--accent-line);stroke-width:1.3}
+  .netz line.hell{stroke:#EDF0F3}
+  .netz line.aktiv{stroke:var(--accent);stroke-width:2.2}
+  .netz circle.kn{cursor:pointer;stroke:#fff;stroke-width:2}
+  .netz circle.kn.aktiv{stroke:var(--accent-deep);stroke-width:3}
+  .netz text{font-size:8.5px;fill:#4B565F;pointer-events:none;font-weight:500}
+  .netz text.aktiv{fill:var(--accent-deep);font-weight:700}
+  .legende{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+  .legende span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .legende i{width:10px;height:10px;border-radius:50%;display:block}
+  .knotendetail{padding:16px 17px;margin-top:14px}
+  .knotendetail h4{font-size:15.5px;font-weight:600;margin-bottom:3px}
+  .knotendetail .kd{font-size:12px;color:var(--muted)}
+  .kante{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--border-2);font-size:13px;line-height:1.5}
+  .kante:first-of-type{border-top:none}
+  .kante .kl{flex:none;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--accent-deep);background:var(--accent-soft);border:1px solid var(--accent-line);
+    padding:3px 8px;border-radius:99px;margin-top:1px}
+  .kante .kt{flex:1;min-width:0}
+  .kante .kt b{font-weight:600;cursor:pointer;color:var(--accent-deep)}
+  .kante .kt small{display:block;color:var(--muted);font-size:12px;margin-top:2px;line-height:1.5}
   .note{margin-top:16px;font-size:12px;color:var(--faint);text-align:center;line-height:1.5}
 
   .authbox{padding:22px;max-width:460px}
@@ -450,7 +473,7 @@
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5C2 3.7 2.7 3 3.5 3H8v10H3.5C2.7 13 2 12.3 2 11.5v-7Z" fill="#fff" opacity=".95"/><path d="M14 4.5c0-.8-.7-1.5-1.5-1.5H8v10h4.5c.8 0 1.5-.7 1.5-1.5v-7Z" fill="#fff" opacity=".6"/></svg></div>
-      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 15 · Lernziele</div></div>
+      <div><div class="name">Lernbegleiter</div><div class="sub">Fassung 16 · Wissenslandkarte</div></div>
     </div>
     <button class="newgoal" onclick="go('paths')"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 3v9M3 7.5h9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>Neues Lernziel</button>
     <div class="navlabel">Lernen</div>
@@ -473,6 +496,7 @@
     <div class="navlabel">Wissen</div>
     <nav>
       <button class="nav-item" data-p="lib" onclick="go('lib',this)"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M3 3h4v11H3zM7 3h4v11H7z" stroke="currentColor" stroke-width="1.3"/><path d="m11 4 2.7.7-2 10.3" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Bibliothek</button>
+      <button class="nav-item" data-p="karte" onclick="go('karte',this)"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="4" cy="4.5" r="2.2" stroke="currentColor" stroke-width="1.3"/><circle cx="13" cy="6" r="2.2" stroke="currentColor" stroke-width="1.3"/><circle cx="7.5" cy="13" r="2.2" stroke="currentColor" stroke-width="1.3"/><path d="M6 5.1 10.9 5.7M5.1 6.5 6.4 10.9M11.8 8 9 11.4" stroke="currentColor" stroke-width="1.2"/></svg>Wissenslandkarte</button>
       <button class="nav-item" data-p="stats" onclick="go('stats',this)"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M3 14V8M8 14V3M13 14v-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Fortschritt</button>
       <button class="nav-item" data-p="acct" onclick="go('acct',this)"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M4 7.5a4.5 4.5 0 0 1 8.2-2.6M13 9.5a4.5 4.5 0 0 1-8.2 2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12 3v2.5H9.5M5 14v-2.5h2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Konto &amp; Sync<span class="dot" id="syncDot"></span></button>
     </nav>
@@ -591,6 +615,12 @@
       <div class="pagerest"><div id="neuArea"></div></div>
     </div>
 
+    <!-- WISSENSLANDKARTE -->
+    <div class="panel" id="p-karte">
+      <div class="topbar"><div class="crumb">Wissen</div><div class="h1">Wissenslandkarte</div></div>
+      <div class="pagerest" style="max-width:none"><div id="karteArea"></div></div>
+    </div>
+
     <!-- STATS -->
     <div class="panel" id="p-stats">
       <div class="topbar"><div class="crumb">Wissen</div><div class="h1">Fortschritt</div></div>
@@ -659,6 +689,7 @@ let S=load()||{};
 S.rev=S.rev||{};S.streak=S.streak||{count:0,last:null};S.total=S.total||0;S.chats=S.chats||{};
 S.karten=S.karten||{};S.quellen=S.quellen||{};S.tomb=S.tomb||{};
 S.pfade=S.pfade||{};S.fokus=S.fokus||null;S.fokusTs=S.fokusTs||0;S.tag=S.tag||{datum:'',anzahl:0};
+S.kanten=S.kanten||{};
 // Altlasten aufräumen: früher wurden Fehlermeldungen im Gespräch mitgespeichert
 Object.values(S.chats).forEach(c=>{if(c&&c.fehler)delete c.fehler;});
 
@@ -795,7 +826,7 @@ try{
 
 function mergeStates(local,remote){
   if(!remote)return local;
-  const out={rev:{},streak:{count:0,last:null},total:Math.max(local.total||0,remote.total||0),chats:{},karten:{},quellen:{},tomb:{},pfade:{}};
+  const out={rev:{},streak:{count:0,last:null},total:Math.max(local.total||0,remote.total||0),chats:{},karten:{},quellen:{},tomb:{},pfade:{},kanten:{}};
   const ids=new Set([...Object.keys(local.rev||{}),...Object.keys(remote.rev||{})]);
   ids.forEach(id=>{
     const a=(local.rev||{})[id],b=(remote.rev||{})[id];
@@ -816,6 +847,7 @@ function mergeStates(local,remote){
   };
   out.karten=vereine(local.karten,remote.karten);
   out.pfade=vereine(local.pfade,remote.pfade);
+  out.kanten=vereine(local.kanten,remote.kanten);
   // Fokus und Tageszähler: der jüngere Stand gewinnt
   out.fokusTs=Math.max(local.fokusTs||0,remote.fokusTs||0);
   out.fokus=((local.fokusTs||0)>=(remote.fokusTs||0))?(local.fokus||null):(remote.fokus||null);
@@ -834,6 +866,7 @@ function mergeStates(local,remote){
     if(out.karten[id]&&(out.karten[id].ts||0)<=t)delete out.karten[id];
     if(out.quellen[id]&&(out.quellen[id].ts||0)<=t)delete out.quellen[id];
     if(out.pfade[id]&&(out.pfade[id].ts||0)<=t)delete out.pfade[id];
+    if(out.kanten[id]&&(out.kanten[id].ts||0)<=t)delete out.kanten[id];
   });
   const ls=local.streak||{},rs=remote.streak||{};
   if((ls.last||'')>(rs.last||''))out.streak={count:ls.count||0,last:ls.last||null};
@@ -847,8 +880,9 @@ async function pullMerge(){
   if(error)throw error;
   if(data&&data.state)S=mergeStates(S,data.state);
   S.chats=S.chats||{};S.karten=S.karten||{};S.quellen=S.quellen||{};S.tomb=S.tomb||{};
-  S.pfade=S.pfade||{};S.tag=S.tag||{datum:'',anzahl:0};
+  S.pfade=S.pfade||{};S.tag=S.tag||{datum:'',anzahl:0};S.kanten=S.kanten||{};
 S.pfade=S.pfade||{};S.fokus=S.fokus||null;S.fokusTs=S.fokusTs||0;S.tag=S.tag||{datum:'',anzahl:0};
+S.kanten=S.kanten||{};
   reparaturLauf();
   saveLocal(S);lastSync=new Date();
 }
@@ -1343,6 +1377,310 @@ function renderCard(){
 function flip(){flipped=true;renderCard();}
 function rate(r){schedule(queue[0],r);queue.shift();if(sess)sess.erledigt++;flipped=false;renderCard();}
 
+/* ---------------- Obsidian-Export ---------------- */
+function dateiName(t){
+  return String(t||'Ohne Titel')
+    .replace(/[\\/:*?"<>|#\^\[\]]/g,' ')
+    .replace(/\s+/g,' ').trim().slice(0,80)||'Ohne Titel';
+}
+async function obsidianExport(){
+  if(!window.JSZip){alert('Das Pack-Werkzeug wurde nicht geladen. Seite neu laden und erneut versuchen.');return;}
+  const zip=new JSZip();
+  const heute=new Date().toISOString().slice(0,10);
+  const alle=kartenListe();
+  if(!alle.length){alert('Es gibt noch keine Karten zum Ausleiten.');return;}
+
+  const namen={};
+  alle.forEach(k=>{namen[k.id]=dateiName(k.concept);});
+  const link=id=>namen[id]?('[['+namen[id]+']]'):'';
+
+  // --- Eine Notiz je Konzept ---
+  alle.forEach(k=>{
+    const q=S.quellen[k.quelle]||{};
+    const rev=S.rev[k.id];
+    const stand=rev?(rev.interval>=21?'gefestigt':(rev.interval>=7?'sitzt':'im Aufbau')):'neu';
+    const raus=kantenVon(k.id);
+    const zeilen=[];
+    zeilen.push('---');
+    zeilen.push('quelle: "'+String(q.titel||k.src||'').replace(/"/g,"'")+'"');
+    zeilen.push('thema: "'+String(k.fn||'').replace(/"/g,"'")+'"');
+    zeilen.push('stand: '+stand);
+    if(k.unbelegt)zeilen.push('ungeprueft: true');
+    zeilen.push('tags: [lernbegleiter'+(k.unbelegt?', ungeprueft':'')+']');
+    zeilen.push('erstellt: '+heute);
+    zeilen.push('---','');
+    zeilen.push('# '+k.concept,'');
+    zeilen.push(String(k.core||'').replace(/\*\*/g,'**'),'');
+    if(k.unbelegt)zeilen.push('> [!warning] Ohne eigene Quelle erstellt','> Fundstellen und Zahlen vor Gebrauch prüfen.','');
+    zeilen.push('## Selbsttest','','**Frage:** '+String(k.q||''),'');
+    zeilen.push('> [!question]- Antwort','> '+String(k.a||'').replace(/\n/g,'\n> '),'');
+    if(raus.length){
+      zeilen.push('## Verbindungen','');
+      raus.forEach(e=>{
+        const andere=e.a===k.id?e.b:e.a;
+        if(!namen[andere])return;
+        const pfeil=e.a===k.id?'→':'←';
+        zeilen.push('- '+pfeil+' **'+e.label+'** '+link(andere)+(e.warum?'  \n  _'+e.warum+'_':''));
+      });
+      zeilen.push('');
+    }
+    zeilen.push('---','Quelle: '+(q.titel?('[['+dateiName(q.titel)+']]'):String(k.src||'')));
+    zip.file('Karten/'+namen[k.id]+'.md',zeilen.join('\n'));
+  });
+
+  // --- Übersicht je Quelle ---
+  Object.values(S.quellen||{}).forEach(q=>{
+    const ks=kartenDerQuelle(q.id);if(!ks.length)return;
+    const z=['---','typ: quelle','tags: [lernbegleiter, quelle]','---','',
+             '# '+q.titel,'',
+             '_'+q.typ+(q.seiten?' · Seiten '+q.seiten:'')+' · '+ks.length+' Karten_','',
+             '## Konzepte',''];
+    const themen={};
+    ks.forEach(k=>{(themen[k.fn||'Ohne Einordnung']=themen[k.fn||'Ohne Einordnung']||[]).push(k);});
+    Object.entries(themen).forEach(([t,tk])=>{
+      z.push('### '+t,'');
+      tk.forEach(k=>z.push('- '+link(k.id)));
+      z.push('');
+    });
+    zip.file('Quellen/'+dateiName(q.titel)+'.md',z.join('\n'));
+  });
+
+  // --- Lernpfade ---
+  Object.values(S.pfade||{}).forEach(pf=>{
+    const z=['---','typ: lernpfad','tags: [lernbegleiter, lernpfad]',
+             pf.deadline?('frist: '+pf.deadline):'','---','',
+             '# '+pf.titel,''];
+    if(pf.gesamtziel)z.push('> [!goal] Ziel','> '+pf.gesamtziel,'');
+    if(pf.beschreibung)z.push(pf.beschreibung,'');
+    (pf.etappen||[]).forEach((e,i)=>{
+      z.push('## '+(i+1)+'. '+e.titel,'');
+      if(e.lernziel)z.push('**'+e.lernziel+'**','');
+      if(e.warum)z.push('_'+e.warum+'_','');
+      (e.karten||[]).forEach(id=>{if(namen[id])z.push('- '+link(id));});
+      z.push('');
+    });
+    if((pf.luecken||[]).length){
+      z.push('## Dazu fehlt noch Material','');
+      pf.luecken.forEach(l=>z.push('- [ ] '+l));
+    }
+    zip.file('Lernpfade/'+dateiName(pf.titel)+'.md',z.filter(x=>x!=='').concat(['']).join('\n'));
+  });
+
+  // --- Einstiegsnotiz ---
+  const kanten=kantenListe();
+  const oben=alle.map(k=>({k,g:kantenVon(k.id).length})).sort((a,b)=>b.g-a.g).slice(0,10);
+  const start=['---','tags: [lernbegleiter]','---','',
+    '# Wissensspeicher','',
+    '_Ausgeleitet am '+new Date().toLocaleDateString('de-DE')+' · '+alle.length+' Konzepte · '+kanten.length+' Verbindungen_','',
+    '## Zentrale Konzepte','',
+    ...oben.map(o=>'- '+link(o.k.id)+' ('+o.g+' Verbindungen)'),'',
+    '## Quellen','',
+    ...Object.values(S.quellen||{}).filter(q=>kartenDerQuelle(q.id).length).map(q=>'- [['+dateiName(q.titel)+']]'),'',
+    '## Lernpfade','',
+    ...Object.values(S.pfade||{}).map(pf=>'- [['+dateiName(pf.titel)+']]'),'',
+    '---','','Tipp: Öffne in Obsidian die Graphansicht, um dein Netz zu sehen.'];
+  zip.file('Wissensspeicher.md',start.join('\n'));
+
+  const blob=await zip.generateAsync({type:'blob'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Wissensspeicher-'+heute+'.zip';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+
+/* ---------------- Wissenslandkarte ---------------- */
+let netzBusy='',netzFehler=null,knotenAktiv=null,netzLayout=null;
+
+const FARBEN=['#3E72AE','#7A6BB0','#2F8C7B','#B0803C','#A65B6B','#4A7FA8','#6B8F3E'];
+function quellFarbe(qid){
+  const ids=Object.keys(S.quellen||{}).sort();
+  const i=ids.indexOf(qid);
+  return FARBEN[(i<0?ids.length:i)%FARBEN.length];
+}
+function kantenListe(){return Object.values(S.kanten||{}).filter(e=>S.karten[e.a]&&S.karten[e.b]);}
+function kantenVon(id){return kantenListe().filter(e=>e.a===id||e.b===id);}
+
+async function netzBauen(){
+  const alle=kartenListe();
+  if(alle.length<2){netzFehler='Für ein Netz braucht es mindestens zwei Karten.';renderKarte();return;}
+  netzFehler=null;netzBusy='Verbindungen werden gesucht …';renderKarte();
+  try{
+    if(!user)throw new Error('Bitte zuerst unter „Konto & Sync" anmelden.');
+    const {data:se}=await sb.auth.getSession();
+    const token=se&&se.session?se.session.access_token:null;
+    if(!token)throw new Error('Keine gültige Sitzung.');
+    const verzeichnis=alle.slice(0,150).map(k=>({
+      id:k.id,concept:k.concept,fn:k.fn,
+      quelle:((S.quellen[k.quelle]||{}).titel||''),
+      core:String(k.core||'').replace(/\*\*/g,'')
+    }));
+    const url=SUPABASE_URL.replace(/\/+$/,'')+'/functions/v1/'+FUNKTION;
+    const r=await fetch(url,{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({rolle:'verknuepfen',karten:verzeichnis})});
+    const roh=await r.text();
+    let d=null;try{d=JSON.parse(roh);}catch(_){}
+    if(!r.ok)throw new Error('HTTP '+r.status+' — '+((d&&d.fehler)||roh.slice(0,250)));
+    if(d&&d.fehler)throw new Error(d.fehler);
+    let txt=((d&&d.text)||'').replace(/^\s*```(?:json)?/i,'').replace(/```\s*$/,'').trim();
+    const ab=txt.indexOf('['),zu=txt.lastIndexOf(']');
+    if(ab<0||zu<0)throw new Error('Unerwartete Antwort – kein Netz erkennbar.');
+    const liste=JSON.parse(txt.slice(ab,zu+1));
+    const jetzt=Date.now();let neuAnz=0;
+    liste.forEach(e=>{
+      if(!e||!S.karten[e.a]||!S.karten[e.b]||e.a===e.b)return;
+      const id='e_'+e.a+'_'+e.b;
+      S.kanten[id]={id,a:e.a,b:e.b,label:kuerze(e.label||'hängt zusammen mit',40),
+                    warum:kuerze(e.warum,240),ts:jetzt};
+      neuAnz++;
+    });
+    if(!neuAnz)throw new Error('Es ließen sich keine belastbaren Verbindungen finden.');
+    netzLayout=null;saveLocal(S);schedulePush();netzBusy='';
+  }catch(e){netzBusy='';netzFehler=e.message||String(e);}
+  renderKarte();
+}
+
+/* Einfaches Kräfte-Layout: Knoten stoßen sich ab, Verbindungen ziehen an. */
+function berechneLayout(knoten,kanten,B,H){
+  const n=knoten.length;
+  const pos=knoten.map((k,i)=>{
+    const w=2*Math.PI*i/n;
+    return {id:k.id,x:B/2+Math.cos(w)*B*0.32,y:H/2+Math.sin(w)*H*0.32};
+  });
+  const idx={};pos.forEach((p,i)=>idx[p.id]=i);
+  const paare=kanten.filter(e=>idx[e.a]!==undefined&&idx[e.b]!==undefined)
+                    .map(e=>[idx[e.a],idx[e.b]]);
+  const abstoss=B*H/Math.max(1,n)*0.9;
+  for(let s=0;s<420;s++){
+    const t=1-s/420;
+    const kr=pos.map(()=>({x:0,y:0}));
+    for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+      let dx=pos[i].x-pos[j].x,dy=pos[i].y-pos[j].y;
+      let d2=dx*dx+dy*dy;if(d2<1)d2=1;
+      const f=abstoss/d2;
+      const d=Math.sqrt(d2);
+      kr[i].x+=dx/d*f;kr[i].y+=dy/d*f;
+      kr[j].x-=dx/d*f;kr[j].y-=dy/d*f;
+    }
+    paare.forEach(([i,j])=>{
+      const dx=pos[j].x-pos[i].x,dy=pos[j].y-pos[i].y;
+      const d=Math.max(1,Math.sqrt(dx*dx+dy*dy));
+      const f=(d-90)*0.012;
+      kr[i].x+=dx/d*f*d;kr[i].y+=dy/d*f*d;
+      kr[j].x-=dx/d*f*d;kr[j].y-=dy/d*f*d;
+    });
+    for(let i=0;i<n;i++){
+      kr[i].x+=(B/2-pos[i].x)*0.006;
+      kr[i].y+=(H/2-pos[i].y)*0.006;
+      const max=18*t+2;
+      let vx=kr[i].x,vy=kr[i].y;
+      const v=Math.sqrt(vx*vx+vy*vy);
+      if(v>max){vx=vx/v*max;vy=vy/v*max;}
+      pos[i].x=Math.min(B-30,Math.max(30,pos[i].x+vx));
+      pos[i].y=Math.min(H-24,Math.max(24,pos[i].y+vy));
+    }
+  }
+  const o={};pos.forEach(p=>o[p.id]=p);return o;
+}
+
+function knotenWahl(id){knotenAktiv=(knotenAktiv===id)?null:id;renderKarte();}
+
+function renderKarte(){
+  const el=document.getElementById('karteArea');if(!el)return;
+  const f=netzFehler?`<div class="msgline show err">${esc(netzFehler)}</div>`:'';
+  if(netzBusy){el.innerHTML=`<div class="card lade"><span class="sp"></span><span>${esc(netzBusy)}</span></div>${f}`;return;}
+
+  const alle=kartenListe();
+  const kanten=kantenListe();
+
+  if(!kanten.length){
+    el.innerHTML=`
+      <div class="card simple" style="text-align:center;padding:34px 22px">
+        <svg width="54" height="54" viewBox="0 0 17 17" fill="none" style="margin:0 auto 14px;color:var(--accent)">
+          <circle cx="4" cy="4.5" r="2.2" stroke="currentColor" stroke-width="1.1"/><circle cx="13" cy="6" r="2.2" stroke="currentColor" stroke-width="1.1"/>
+          <circle cx="7.5" cy="13" r="2.2" stroke="currentColor" stroke-width="1.1"/>
+          <path d="M6 5.1 10.9 5.7M5.1 6.5 6.4 10.9M11.8 8 9 11.4" stroke="currentColor" stroke-width="1"/></svg>
+        <h3 style="font-size:17px;font-weight:600;margin-bottom:6px">Noch kein Netz</h3>
+        <p style="font-size:13.5px;color:var(--muted);line-height:1.6;max-width:420px;margin:0 auto">
+          Deine ${alle.length} Karten liegen bisher als Einzelstücke nebeneinander. Der Begleiter kann sie durchgehen
+          und die inhaltlichen Verbindungen benennen – besonders die <b>quer zwischen deinen Quellen</b>.</p>
+        <button class="btn" style="max-width:280px;margin:18px auto 0" onclick="netzBauen()">Verbindungen suchen</button>
+      </div>${f}`;
+    return;
+  }
+
+  // Nur verbundene Karten in die Landkarte
+  const drin=new Set();kanten.forEach(e=>{drin.add(e.a);drin.add(e.b);});
+  const knoten=alle.filter(k=>drin.has(k.id));
+  const B=760,H=Math.max(420,Math.min(760,260+knoten.length*13));
+  if(!netzLayout||netzLayout.n!==knoten.length)netzLayout={n:knoten.length,pos:berechneLayout(knoten,kanten,B,H)};
+  const pos=netzLayout.pos;
+
+  const nachbarn=new Set();
+  if(knotenAktiv)kantenVon(knotenAktiv).forEach(e=>{nachbarn.add(e.a);nachbarn.add(e.b);});
+
+  const linien=kanten.map(e=>{
+    const A=pos[e.a],Bp=pos[e.b];if(!A||!Bp)return '';
+    const an=knotenAktiv&&(e.a===knotenAktiv||e.b===knotenAktiv);
+    const kl=knotenAktiv?(an?'aktiv':'hell'):'';
+    return `<line x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${Bp.x.toFixed(1)}" y2="${Bp.y.toFixed(1)}" class="${kl}"/>`;
+  }).join('');
+
+  const punkte=knoten.map(k=>{
+    const pt=pos[k.id];if(!pt)return '';
+    const grad=kantenVon(k.id).length;
+    const r=Math.min(13,6+grad*1.1);
+    const rev=S.rev[k.id];
+    const deck=(rev&&rev.interval>=21)?1:((rev&&rev.interval>=7)?0.75:0.45);
+    const an=knotenAktiv===k.id;
+    const blass=knotenAktiv&&!nachbarn.has(k.id);
+    const kurz=k.concept.length>26?k.concept.slice(0,25)+'…':k.concept;
+    return `<g opacity="${blass?0.25:1}">
+      <circle class="kn ${an?'aktiv':''}" cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="${r}"
+        fill="${quellFarbe(k.quelle)}" fill-opacity="${deck}" onclick="knotenWahl('${k.id}')"/>
+      <text x="${pt.x.toFixed(1)}" y="${(pt.y+r+10).toFixed(1)}" text-anchor="middle" class="${an?'aktiv':''}">${esc(kurz)}</text>
+    </g>`;
+  }).join('');
+
+  const qs=Object.values(S.quellen||{}).filter(q=>alle.some(k=>k.quelle===q.id));
+  const aktiv=knotenAktiv?S.karten[knotenAktiv]:null;
+
+  el.innerHTML=`
+    <div class="sectitle" style="margin-top:0"><span>${knoten.length} verbundene Karten · ${kanten.length} Verbindungen</span>
+      <a onclick="netzBauen()">neu suchen</a></div>
+    <svg class="netz" viewBox="0 0 ${B} ${H}" preserveAspectRatio="xMidYMid meet">${linien}${punkte}</svg>
+    <div class="legende">${qs.map(q=>`<span><i style="background:${quellFarbe(q.id)}"></i>${esc(kuerze(q.titel,30))}</span>`).join('')}
+      <span style="margin-left:auto">Kreisgröße = Zahl der Verbindungen · Farbsättigung = wie gut es sitzt</span></div>
+
+    ${aktiv?`<div class="card knotendetail">
+      <h4>${esc(aktiv.concept)}</h4>
+      <div class="kd">${esc(aktiv.fn)} · ${esc(aktiv.src)}</div>
+      <div style="font-size:13.5px;line-height:1.55;margin:11px 0 4px;color:#3C444C">${kernHtml(aktiv.core)}</div>
+      <div style="margin-top:10px">
+      ${kantenVon(aktiv.id).map(e=>{
+        const andere=e.a===aktiv.id?e.b:e.a;
+        const k2=S.karten[andere];if(!k2)return '';
+        const richtung=e.a===aktiv.id?'':'← ';
+        return `<div class="kante"><span class="kl">${richtung}${esc(e.label)}</span>
+          <div class="kt"><b onclick="knotenWahl('${andere}')">${esc(k2.concept)}</b>
+          ${e.warum?`<small>${esc(e.warum)}</small>`:''}</div></div>`;
+      }).join('')}
+      </div>
+      <div style="display:flex;gap:9px;margin-top:14px">
+        <button class="btn ghost" style="margin-top:0" onclick="streitUeber('${aktiv.id}','dozent')">Vertiefen</button>
+        <button class="btn ghost" style="margin-top:0" onclick="streitUeber('${aktiv.id}','adorno')">Streiten</button>
+      </div>
+    </div>`:'<p class="note">Tipp auf einen Punkt, um seine Verbindungen zu sehen.</p>'}
+
+    <div class="sectitle">Zweites Gehirn</div>
+    <div class="card simple">
+      <p style="font-size:13.5px;color:#46525C;line-height:1.6">Dein Wissen als Obsidian-Tresor: eine verlinkte Notiz je Konzept,
+      dazu Übersichten für Quellen und Lernpfade. Entpacken, Ordner in Obsidian öffnen – fertig ist dein Zettelkasten.</p>
+      <button class="btn" onclick="obsidianExport()">Als Obsidian-Tresor herunterladen</button>
+    </div>${f}`;
+}
+
 /* ---------------- Lernpfade ---------------- */
 function pfadKarten(p){
   return ((p&&p.etappen)||[]).reduce((a,e)=>a.concat(e.karten||[]),[]).filter(id=>S.karten[id]);
@@ -1675,7 +2013,9 @@ function quelleLoeschen(qid){
   const anz=kartenDerQuelle(qid).length;
   if(!confirm('„'+q.titel+'" mit '+anz+' Karten entfernen? Der Lernfortschritt dieser Karten geht verloren.'))return;
   const jetzt=Date.now();
+  const weg=new Set(kartenDerQuelle(qid).map(k=>k.id));
   kartenDerQuelle(qid).forEach(k=>{delete S.karten[k.id];delete S.rev[k.id];S.tomb[k.id]=jetzt;});
+  Object.values(S.kanten||{}).forEach(e=>{if(weg.has(e.a)||weg.has(e.b)){delete S.kanten[e.id];S.tomb[e.id]=jetzt;}});
   delete S.quellen[qid];S.tomb[qid]=jetzt;
   saveLocal(S);schedulePush();renderLib();updateAll();
 }
@@ -1996,7 +2336,7 @@ function updateAll(){
 }
 
 /* ---------------- Navigation ---------------- */
-const titles={home:'Heute',cards:'Karteikarten',paths:'Lernpfade',spar:'Gespräch',pod:'Audio',lib:'Bibliothek',neu:'Quelle hinzufügen',lesen:'Quelle lesen',stats:'Fortschritt',acct:'Konto & Sync'};
+const titles={home:'Heute',cards:'Karteikarten',paths:'Lernpfade',spar:'Gespräch',pod:'Audio',lib:'Bibliothek',neu:'Quelle hinzufügen',lesen:'Quelle lesen',karte:'Wissenslandkarte',stats:'Fortschritt',acct:'Konto & Sync'};
 function go(p,el,wer){
   libMenu=null;
   if(p==='spar'&&wer&&wer!==partner){partner=wer;chatKey=null;letzterFehler=null;}
@@ -2016,6 +2356,7 @@ function go(p,el,wer){
   if(p==='paths')renderPaths();
   if(p==='neu')renderNeu();
   if(p==='lesen')renderLesen();
+  if(p==='karte')renderKarte();
   if(p==='home'||p==='stats')updateAll();
   closeDrawer();
 }
